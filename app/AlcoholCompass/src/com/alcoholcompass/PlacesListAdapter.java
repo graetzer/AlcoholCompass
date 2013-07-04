@@ -1,6 +1,6 @@
 package com.alcoholcompass;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,9 +14,9 @@ import com.alcoholcompass.data.Place;
 public class PlacesListAdapter extends BaseAdapter {
 
 	private LayoutInflater inflater;
-	private ArrayList<Place> items;
+	private List<Place> items;
 	
-	public PlacesListAdapter(Context ctx, ArrayList<Place> items){
+	public PlacesListAdapter(Context ctx, List<Place> items){
 		inflater = LayoutInflater.from(ctx);
 		this.items = items;
 	}
