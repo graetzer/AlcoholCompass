@@ -28,6 +28,7 @@ public class NavigatorFragment extends Fragment{
 	private Button buttonMore, buttonNavigation;
 	private ListView listViewPlaces;
 	private int lastArrowDegrees;
+	private boolean isArrowTurning;
 	
 	
 	@Override
@@ -87,7 +88,6 @@ public class NavigatorFragment extends Fragment{
 	}
 	
 	private void hidePlacesList(){
-		
 		Animation slide_out = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_up_slide);
 		slide_out.setAnimationListener(new AnimationListener() {
 			
@@ -105,7 +105,6 @@ public class NavigatorFragment extends Fragment{
 		});
 		
 		listViewPlaces.startAnimation(slide_out);
-		
 	}
 	
 	private void demoFillPlacesList(){
@@ -139,15 +138,17 @@ public class NavigatorFragment extends Fragment{
 	
 	private void init(){
 		lastArrowDegrees = 0;
+		isArrowTurning = false;
 	}
 	
 	private void setArrow(int degrees){
 		
-		if (getActivity() == null) return;
+		if (getActivity() == null || isArrowTurning) return;
 		
 		degrees = degrees % 360;
 		final int newDegrees = degrees;
 		if(degrees == lastArrowDegrees) return;
+		isArrowTurning = true;
 		
 		imageViewArrow.setRotation(0);
 		
@@ -157,7 +158,7 @@ public class NavigatorFragment extends Fragment{
 				Animation.RELATIVE_TO_SELF, 0.5f);
 		animation.setFillEnabled(true);
 		animation.setFillBefore(true);
-		animation.setDuration(1000);
+		animation.setDuration(800);
 		animation.setInterpolator(getActivity().getApplicationContext(), interpolator.accelerate_decelerate);
 		
 		animation.setAnimationListener(new AnimationListener() {
@@ -172,6 +173,7 @@ public class NavigatorFragment extends Fragment{
 			public void onAnimationEnd(Animation animation) {
 				lastArrowDegrees = newDegrees;
 				imageViewArrow.setRotation(newDegrees);
+				isArrowTurning = false;
 			}
 		});
 		
