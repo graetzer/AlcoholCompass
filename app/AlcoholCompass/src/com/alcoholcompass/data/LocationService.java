@@ -14,7 +14,7 @@ import android.os.Bundle;
 public class LocationService implements LocationListener, SensorEventListener {
 	private static LocationService instance;
 
-	private static LocationService getInstance(Context ctx) {
+	public static LocationService getInstance(Context ctx) {
 		if (instance == null)
 			instance = new LocationService(ctx);
 		return instance;
@@ -69,7 +69,7 @@ public class LocationService implements LocationListener, SensorEventListener {
 		locationManager.removeUpdates(this);
 	}
 
-	public float distanceToLocation(double latitude, long longitude) {
+	public float distanceToLocation(double latitude, double longitude) {
 		if (mCurrentLocation != null) {
 			float[] results = new float[3];
 			Location.distanceBetween(mCurrentLocation.getLatitude(),
@@ -82,7 +82,7 @@ public class LocationService implements LocationListener, SensorEventListener {
 		return 0;
 	}
 
-	public double arrowAngleTo(double latitude, long longitude) {
+	public double arrowAngleTo(double latitude, double longitude) {
 		if (mCurrentLocation != null) {
 			Location loc = new Location("stuff");
 			loc.setLatitude(latitude);
