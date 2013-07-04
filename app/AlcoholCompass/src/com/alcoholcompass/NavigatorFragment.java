@@ -15,6 +15,8 @@ import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.alcoholcompass.data.LocationService;
+
 public class NavigatorFragment extends Fragment{
 	
 	private ImageView imageViewArrow;
@@ -34,7 +36,9 @@ public class NavigatorFragment extends Fragment{
 			
 			@Override
 			public void onClick(View v) {
-				//TODO
+				LocationService service = LocationService.getInstance(getActivity());
+				double degree = service.arrowAngleTo(50.778104, 6.060867);
+				setArrow((int)degree);
 			}
 		});
 		
