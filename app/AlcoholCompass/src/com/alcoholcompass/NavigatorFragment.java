@@ -1,6 +1,8 @@
 package com.alcoholcompass;
 
 import android.R.interpolator;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -40,7 +42,8 @@ public class NavigatorFragment extends Fragment{
 			
 			@Override
 			public void onClick(View v) {
-				//TODO
+				Intent navi = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:ll=" + 50.7777075 + "," + 6.0608821 ));
+				startActivity(navi);
 			}
 		});
 		
