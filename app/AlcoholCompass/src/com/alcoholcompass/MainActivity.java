@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
 
 public class MainActivity extends FragmentActivity {
 	private TabsAdapter mPagerAdapter;
@@ -24,15 +23,18 @@ public class MainActivity extends FragmentActivity {
 		// Set up the action bar.
 		final ActionBar bar = getActionBar();
 		bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		bar.setDisplayShowTitleEnabled(false);
+	    bar.setDisplayShowHomeEnabled(false);
+	    
+		mPagerAdapter = new TabsAdapter(this, (ViewPager) findViewById(R.id.pager));
 
-		// Create the adapter that will return a fragment for each of the three
-		// primary sections of the app.
-		mPagerAdapter = new TabsAdapter(this,
-				(ViewPager) findViewById(R.id.pager));
-
+		//Add tabs to the Actionbar
 		mPagerAdapter.addTab(
 				bar.newTab().setText(R.string.fragment_navigation_title),
 				NavigatorFragment.class, null);
+		
+		mPagerAdapter.addTab(bar.newTab().setText(R.string.fragment_showtell_title),
+				ShowTellFragment.class, null);
 
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("tab"));
@@ -46,26 +48,9 @@ public class MainActivity extends FragmentActivity {
                 .getSelectedNavigationIndex());
     }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	/**
-	 * This is a helper class that implements the management of tabs and all
-	 * details of connecting a ViewPager with associated TabHost. It relies on a
-	 * trick. Normally a tab host has a simple API for supplying a View or
-	 * Intent that each tab will show. This is not sufficient for switching
-	 * between pages. So instead we make the content part of the tab host 0dp
-	 * high (it is not shown) and the TabsAdapter supplies its own dummy view to
-	 * show as the tab content. It listens to changes in tabs, and takes care of
-	 * switch to the correct paged in the ViewPager whenever the selected tab
-	 * changes.
-	 */
 	private static class TabsAdapter extends FragmentPagerAdapter implements
 			ViewPager.OnPageChangeListener, ActionBar.TabListener {
+		
 		private final Context mContext;
 		private final ActionBar mBar;
 		private final ViewPager mViewPager;
@@ -90,8 +75,7 @@ public class MainActivity extends FragmentActivity {
 			mViewPager.setOnPageChangeListener(this);
 		}
 
-		public void addTab(ActionBar.Tab tab, Class<? extends Fragment> clss,
-				Bundle args) {
+		public void addTab(ActionBar.Tab tab, Class<? extends Fragment> clss, Bundle args) {
 			TabInfo info = new TabInfo(clss, args);
 			tab.setTag(info);
 			tab.setTabListener(this);
@@ -108,14 +92,11 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		public Fragment getItem(int position) {
 			TabInfo info = mTabs.get(position);
-			return Fragment.instantiate(mContext, info.clss.getName(),
-					info.args);
+			return Fragment.instantiate(mContext, info.clss.getName(), info.args);
 		}
 
 		@Override
-		public void onPageScrolled(int position, float positionOffset,
-				int positionOffsetPixels) {
-		}
+		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
 		@Override
 		public void onPageSelected(int position) {
@@ -123,8 +104,7 @@ public class MainActivity extends FragmentActivity {
 		}
 
 		@Override
-		public void onPageScrollStateChanged(int state) {
-		}
+		public void onPageScrollStateChanged(int state) { }
 
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -137,13 +117,9 @@ public class MainActivity extends FragmentActivity {
 		}
 
 		@Override
-		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-
-		}
+		public void onTabUnselected(Tab tab, FragmentTransaction ft) { }
 
 		@Override
-		public void onTabReselected(Tab tab, FragmentTransaction ft) {
-
-		}
+		public void onTabReselected(Tab tab, FragmentTransaction ft) { }
 	}
 }
