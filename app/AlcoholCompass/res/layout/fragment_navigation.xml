@@ -39,4 +39,16 @@
             android:text="Navigation" />
     </LinearLayout>
 
+    <ListView
+        android:id="@+id/listViewPlaces"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="#BBFFFFFF"
+        android:divider="@color/blue"
+        android:dividerHeight="3dp" >
+
+    </ListView>
+
 </RelativeLayout>
