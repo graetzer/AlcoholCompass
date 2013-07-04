@@ -12,7 +12,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
-public class LocationService implements LocationListener, SensorEventListener {
+public class LocationService implements LocationListener {
 	private static LocationService instance;
 
 	public static LocationService getInstance(Context ctx) {
@@ -23,30 +23,20 @@ public class LocationService implements LocationListener, SensorEventListener {
 
 	private Context mCtx;
 	private final String mLocationProvider = LocationManager.GPS_PROVIDER;
-
+	private CompassSensor compass;
 	private LocationManager locationManager;
-	private SensorManager sensorManager;
-	private Sensor sensorAccelerometer;
-	private Sensor sensorMagneticField;
 
 	private Location mCurrentLocation;
-	private double mCurrentAzimuth;
 
 	private LocationService(Context ctx) {
 		mCtx = ctx;
-
-		sensorManager = (SensorManager) mCtx
-				.getSystemService(Context.SENSOR_SERVICE);
-		sensorAccelerometer = sensorManager
-				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		sensorMagneticField = sensorManager
-				.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
 		locationManager = (LocationManager) mCtx
 				.getSystemService(Context.LOCATION_SERVICE);
 
 		mCurrentLocation = locationManager
 				.getLastKnownLocation(mLocationProvider);
+		compass = CompassSensor.getInstance(mCtx);
 	}
 
 	public Location currentLocation() {
@@ -55,17 +45,12 @@ public class LocationService implements LocationListener, SensorEventListener {
 
 	public void startUpdates() {
 		locationManager.requestLocationUpdates(mLocationProvider, 0, 0, this);
-
-		sensorManager.registerListener(this, sensorAccelerometer,
-				SensorManager.SENSOR_DELAY_NORMAL);
-		sensorManager.registerListener(this, sensorMagneticField,
-				SensorManager.SENSOR_DELAY_NORMAL);
+		compass.onResume();
 	}
 
 	public void stopUpdates() {
 		locationManager.removeUpdates(this);
-		sensorManager.unregisterListener(this, sensorAccelerometer);
-		sensorManager.unregisterListener(this, sensorMagneticField);
+		compass.onPause();
 	}
 
 	public float distanceToLocation(double latitude, double longitude) {
@@ -81,15 +66,16 @@ public class LocationService implements LocationListener, SensorEventListener {
 		return 0;
 	}
 
-	public double arrowAngleTo(double latitude, double longitude) {
+	public int arrowAngleTo(double latitude, double longitude) {
 		if (mCurrentLocation != null) {
-			double heading = mCurrentAzimuth;
+			
 			
 			float[] results = new float[3];
 			Location.distanceBetween(mCurrentLocation.getLatitude(),
 					mCurrentLocation.getLongitude(), latitude, longitude,
 					results);
 			double bearing = results[2];
+			double degree = 0;
 
 			GeomagneticField geoField = new GeomagneticField(
 					Double.valueOf(mCurrentLocation.getLatitude()).floatValue(),
@@ -97,13 +83,13 @@ public class LocationService implements LocationListener, SensorEventListener {
 							.floatValue(),
 					Double.valueOf(mCurrentLocation.getAltitude()).floatValue(),
 					System.currentTimeMillis());
-			heading += geoField.getDeclination();
-			heading = (bearing - heading) * -1;
+			degree += compass.getLastDirection();
+			degree += geoField.getDeclination();
+			degree += bearing;// (bearing - degree) * -1;
 
-			heading = normalizeDegree(heading);
-			Log.d("LocationService", "Degree: " + heading);
+			Log.d("LocationService", "Degree: " + degree);
 
-			return bearing;//heading;
+			return compass.getLastDirection();//normalizeDegrees(degree);//Math.round(-degree / 360 + 180);
 		}
 		return 0;
 	}
@@ -191,53 +177,9 @@ public class LocationService implements LocationListener, SensorEventListener {
 		}
 		return provider1.equals(provider2);
 	}
-
-	private double normalizeDegree(double value) {
-		if (value >= 0.0f && value <= 180.0f) {
-			return value;
-		} else {
-			return 180 + (180 + value);
-		}
-	}
-
-	@Override
-	public void onAccuracyChanged(Sensor arg0, int arg1) {
-	}
 	
-	private float[] valuesAccelerometer = new float[3];
-	private float[] valuesMagneticField = new float[3];
-
-	private float[] matrixR = new float[9];
-	private float[] matrixI = new float[9];
-	private float[] matrixValues = new float[3];
-
-	@Override
-	public void onSensorChanged(SensorEvent event) {
-		switch (event.sensor.getType()) {
-		case Sensor.TYPE_ACCELEROMETER:
-			for (int i = 0; i < 3; i++) {
-				valuesAccelerometer[i] = event.values[i];
-			}
-			break;
-		case Sensor.TYPE_MAGNETIC_FIELD:
-			for (int i = 0; i < 3; i++) {
-				valuesMagneticField[i] = event.values[i];
-			}
-			break;
-		}
-
-		boolean success = SensorManager.getRotationMatrix(matrixR, matrixI,
-				valuesAccelerometer, valuesMagneticField);
-
-		if (success) {
-			SensorManager.getOrientation(matrixR, matrixValues);
-
-			double azimuth = Math.toDegrees(matrixValues[0]);
-			// double pitch = Math.toDegrees(matrixValues[1]);
-			// double roll = Math.toDegrees(matrixValues[2]);
-
-			mCurrentAzimuth = azimuth;
-		}
-
+	private int normalizeDegrees(double rads){
+	    return (int)((rads+360)%360);
 	}
+
 }
