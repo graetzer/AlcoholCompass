@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -44,11 +44,11 @@ public class NavigatorFragment extends Fragment{
 			
 			@Override
 			public void onClick(View v) {
-				LocationService service = LocationService.getInstance(getActivity());
-				int degree = service.arrowAngleTo(50.778104, 6.060867);
-				setArrow(degree);
 
-				//demoFillPlacesList();
+//				LocationService service = LocationService.getInstance(getActivity());
+//				int degree = service.arrowAngleTo(50.778104, 6.060867);
+//				setArrow(degree);
+				togglePlacesList();
 			}
 		});
 		
@@ -64,6 +64,45 @@ public class NavigatorFragment extends Fragment{
 		return view;
 	}
 	
+	private void togglePlacesList(){
+		if(listViewPlaces.getVisibility() == View.INVISIBLE){
+			displayPlacesList();
+		}else{
+			hidePlacesList();
+		}
+	}
+	
+	private void displayPlacesList(){
+		demoFillPlacesList();
+		
+		listViewPlaces.setVisibility(View.VISIBLE);
+		Animation slide_in = AnimationUtils.loadAnimation(getActivity(), R.anim.top_down_slide);
+		listViewPlaces.startAnimation(slide_in);
+		buttonMore.setText(R.string.less);
+	}
+	
+	private void hidePlacesList(){
+		
+		Animation slide_out = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_up_slide);
+		slide_out.setAnimationListener(new AnimationListener() {
+			
+			@Override
+			public void onAnimationStart(Animation animation) {}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				listViewPlaces.setVisibility(View.INVISIBLE);
+				buttonMore.setText(R.string.more);
+			}
+		});
+		
+		listViewPlaces.startAnimation(slide_out);
+		
+	}
+	
 	private void demoFillPlacesList(){
 		ArrayList<Place> liste = new ArrayList<Place>();
 		liste.add(new Place("Toller Kiosk", "Adresse", 0, 0, 12, 12));
@@ -71,9 +110,6 @@ public class NavigatorFragment extends Fragment{
 		liste.add(new Place("Toller Kiosk", "Adresse", 0, 0, 12, 12));
 		liste.add(new Place("Noch ein besserer Kiosk", "Adresse", 0, 0, 12, 12));
 		listViewPlaces.setAdapter(new PlacesListAdapter(getActivity().getApplicationContext(), liste));
-		
-		Animation slide_in = AnimationUtils.loadAnimation(getActivity(), R.anim.top_down_slide);
-		listViewPlaces.startAnimation(slide_in);
 	}
 
 	@Override

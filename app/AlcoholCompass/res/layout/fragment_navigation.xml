@@ -47,7 +47,8 @@
         android:layout_alignParentTop="true"
         android:background="#BBFFFFFF"
         android:divider="@color/blue"
-        android:dividerHeight="3dp" >
+        android:dividerHeight="3dp"
+        android:visibility="invisible" >
 
     </ListView>
 
