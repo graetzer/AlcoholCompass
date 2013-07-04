@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 
 public class LocationService implements LocationListener, SensorEventListener {
 	private static LocationService instance;
@@ -41,7 +42,7 @@ public class LocationService implements LocationListener, SensorEventListener {
 		sensorMagneticField = sensorManager
 				.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-		LocationManager locationManager = (LocationManager) mCtx
+		locationManager = (LocationManager) mCtx
 				.getSystemService(Context.LOCATION_SERVICE);
 
 		mCurrentLocation = locationManager
@@ -53,8 +54,6 @@ public class LocationService implements LocationListener, SensorEventListener {
 	}
 
 	public void startUpdates() {
-		locationManager = (LocationManager) mCtx
-				.getSystemService(Context.LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(mLocationProvider, 0, 0, this);
 
 		sensorManager.registerListener(this, sensorAccelerometer,
@@ -64,9 +63,9 @@ public class LocationService implements LocationListener, SensorEventListener {
 	}
 
 	public void stopUpdates() {
-		LocationManager locationManager = (LocationManager) mCtx
-				.getSystemService(Context.LOCATION_SERVICE);
 		locationManager.removeUpdates(this);
+		sensorManager.unregisterListener(this, sensorAccelerometer);
+		sensorManager.unregisterListener(this, sensorMagneticField);
 	}
 
 	public float distanceToLocation(double latitude, double longitude) {
@@ -84,11 +83,13 @@ public class LocationService implements LocationListener, SensorEventListener {
 
 	public double arrowAngleTo(double latitude, double longitude) {
 		if (mCurrentLocation != null) {
-			Location loc = new Location("stuff");
-			loc.setLatitude(latitude);
-			loc.setLongitude(longitude);
-			double bearing = mCurrentLocation.bearingTo(mCurrentLocation);
 			double heading = mCurrentAzimuth;
+			
+			float[] results = new float[3];
+			Location.distanceBetween(mCurrentLocation.getLatitude(),
+					mCurrentLocation.getLongitude(), latitude, longitude,
+					results);
+			double bearing = results[2];
 
 			GeomagneticField geoField = new GeomagneticField(
 					Double.valueOf(mCurrentLocation.getLatitude()).floatValue(),
@@ -100,8 +101,9 @@ public class LocationService implements LocationListener, SensorEventListener {
 			heading = (bearing - heading) * -1;
 
 			heading = normalizeDegree(heading);
+			Log.d("LocationService", "Degree: " + heading);
 
-			return heading;
+			return bearing;//heading;
 		}
 		return 0;
 	}
@@ -201,16 +203,16 @@ public class LocationService implements LocationListener, SensorEventListener {
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
 	}
+	
+	private float[] valuesAccelerometer = new float[3];
+	private float[] valuesMagneticField = new float[3];
+
+	private float[] matrixR = new float[9];
+	private float[] matrixI = new float[9];
+	private float[] matrixValues = new float[3];
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		float[] valuesAccelerometer = new float[3];
-		float[] valuesMagneticField = new float[3];
-
-		float[] matrixR = new float[9];
-		float[] matrixI = new float[9];
-		float[] matrixValues = new float[3];
-
 		switch (event.sensor.getType()) {
 		case Sensor.TYPE_ACCELEROMETER:
 			for (int i = 0; i < 3; i++) {
@@ -231,9 +233,9 @@ public class LocationService implements LocationListener, SensorEventListener {
 			SensorManager.getOrientation(matrixR, matrixValues);
 
 			double azimuth = Math.toDegrees(matrixValues[0]);
-			//double pitch = Math.toDegrees(matrixValues[1]);
-			//double roll = Math.toDegrees(matrixValues[2]);
-			
+			// double pitch = Math.toDegrees(matrixValues[1]);
+			// double roll = Math.toDegrees(matrixValues[2]);
+
 			mCurrentAzimuth = azimuth;
 		}
 
