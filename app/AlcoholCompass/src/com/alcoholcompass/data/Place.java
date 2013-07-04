@@ -3,14 +3,14 @@ package com.alcoholcompass.data;
 public class Place {
 	private String name, address;
 	private int open, closed;
-	private float latitude, longitude, rating;
+	private double latitude, longitude, rating;
 	
 	public Place(String name,
 			String address,
 			int open,
 			int closed,
-			float latitude,
-			float longitude
+			double latitude,
+			double longitude
 			){
 		
 		this.setName(name);
@@ -60,27 +60,27 @@ public class Place {
 		this.open = open;
 	}
 
-	public float getLatitude() {
+	public double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(float latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 
-	public float getRating() {
+	public double getRating() {
 		return rating;
 	}
 
-	public void setRating(float rating) {
+	public void setRating(double rating) {
 		this.rating = rating;
 	}
 
-	public float getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(float longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 	

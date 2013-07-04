@@ -1,9 +1,11 @@
 package com.alcoholcompass;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.R.interpolator;
+import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +23,7 @@ import android.widget.ListView;
 
 import com.alcoholcompass.data.LocationService;
 import com.alcoholcompass.data.Place;
+import com.alcoholcompass.data.WebService;
 
 public class NavigatorFragment extends Fragment{
 	
@@ -41,10 +44,22 @@ public class NavigatorFragment extends Fragment{
 		buttonMore = (Button) view.findViewById(R.id.buttonShowMore);
 		buttonNavigation = (Button) view.findViewById(R.id.buttonNavigation);
 		
+		final LocationService service = LocationService.getInstance(getActivity());
+		Location loc = service.currentLocation();
+		WebService.loadPlaces(loc, new WebService.PlacesHandler() {
+			
+			@Override
+			public void success(List<Place> places) {
+				listViewPlaces.setAdapter(new PlacesListAdapter(getActivity().getApplicationContext(), places));
+			}
+			
+			@Override
+			public void failure() {}
+		});
+				
 		LocationService.getInstance(getActivity()).addListener(new LocationService.LocationListener() {
 			@Override
 			public void onLocationUpdate() {
-				LocationService service = LocationService.getInstance(getActivity());
 				int degree = service.arrowAngleTo(50.778104, 6.060867);
 				setArrow(degree);
 			}
@@ -79,7 +94,6 @@ public class NavigatorFragment extends Fragment{
 	}
 	
 	private void displayPlacesList(){
-		demoFillPlacesList();
 		
 		listViewPlaces.setVisibility(View.VISIBLE);
 		Animation slide_in = AnimationUtils.loadAnimation(getActivity(), R.anim.top_down_slide);
@@ -105,15 +119,6 @@ public class NavigatorFragment extends Fragment{
 		});
 		
 		listViewPlaces.startAnimation(slide_out);
-	}
-	
-	private void demoFillPlacesList(){
-		ArrayList<Place> liste = new ArrayList<Place>();
-		liste.add(new Place("Toller Kiosk", "Adresse", 0, 0, 12, 12));
-		liste.add(new Place("Noch ein besserer Kiosk", "Adresse", 0, 0, 12, 12));
-		liste.add(new Place("Toller Kiosk", "Adresse", 0, 0, 12, 12));
-		liste.add(new Place("Noch ein besserer Kiosk", "Adresse", 0, 0, 12, 12));
-		listViewPlaces.setAdapter(new PlacesListAdapter(getActivity().getApplicationContext(), liste));
 	}
 
 	@Override
@@ -158,7 +163,7 @@ public class NavigatorFragment extends Fragment{
 				Animation.RELATIVE_TO_SELF, 0.5f);
 		animation.setFillEnabled(true);
 		animation.setFillBefore(true);
-		animation.setDuration(800);
+		animation.setDuration(500);
 		animation.setInterpolator(getActivity().getApplicationContext(), interpolator.accelerate_decelerate);
 		
 		animation.setAnimationListener(new AnimationListener() {

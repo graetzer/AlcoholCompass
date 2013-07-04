@@ -26,6 +26,7 @@ public class LocationService implements LocationListener {
 	private CompassSensor compass;
 	private LocationManager locationManager;
 	private Location mCurrentLocation;
+	static private final int duration = 2500;
 
 	private LocationService(Context ctx) {
 		mCtx = ctx;
@@ -186,7 +187,7 @@ public class LocationService implements LocationListener {
 	public void addListener(LocationListener listener){
 	    if(listeners.size() == 0){
 	        //Start the timer on first listener
-	        handler.sendMessageDelayed(Message.obtain(handler, 1),1000);
+	        handler.sendMessageDelayed(Message.obtain(handler, 1), duration);
 	    }
 	    listeners.add(listener);
 	}
@@ -221,7 +222,7 @@ public class LocationService implements LocationListener {
 	         if (sensor != null) {
 	              sensor.callListeners();
 	         }
-	        sendMessageDelayed(Message.obtain(this, 1), 1000);
+	        sendMessageDelayed(Message.obtain(this, 1), duration);
 	    }
 	}
 

@@ -61,13 +61,14 @@ private final SensorEventListener sensorListener = new SensorEventListener(){
 
             float[] R = new float[16];
             float[] I = new float[16];
-            float[] outR = new float[16];
+            //float[] outR = new float[16];
 
             //Get the rotation matrix, then remap it from camera surface to world coordinates
             SensorManager.getRotationMatrix(R, I, accelerometerValues, geomagneticMatrix);
-            SensorManager.remapCoordinateSystem(R, SensorManager.AXIS_X, SensorManager.AXIS_Z, outR);
+            //SensorManager.remapCoordinateSystem(R, SensorManager.AXIS_X, SensorManager.AXIS_Z, outR);
             float values[] = new float[4];
-            SensorManager.getOrientation(outR,values);
+            //SensorManager.getOrientation(outR,values);
+            SensorManager.getOrientation(R,values);
 
             int direction = normalizeDegrees(filterChange((int)Math.toDegrees(values[0])));
             int pitch = normalizeDegrees(Math.toDegrees(values[1]));
