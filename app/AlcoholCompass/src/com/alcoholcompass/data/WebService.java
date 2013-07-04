@@ -65,12 +65,18 @@ public class WebService implements LocationListener {
 			loc.setLatitude(latitude);
 			loc.setLongitude(longitude);
 			float bearing =  mCurrentLocation.bearingTo(mCurrentLocation);
+			float heading = 0;
+			
 			GeomagneticField geoField = new GeomagneticField(
 					 Double.valueOf(mCurrentLocation.getLatitude()).floatValue(),
 			         Double.valueOf(mCurrentLocation.getLongitude()).floatValue(),
 			         Double.valueOf(mCurrentLocation.getAltitude()).floatValue(),
 			         System.currentTimeMillis()
 			      );
+			heading += geoField.getDeclination();
+			heading = (bearing - heading) * -1;
+			
+			heading = normalizeDegree(heading);
 			
 			return 0;
 		}
@@ -147,5 +153,13 @@ public class WebService implements LocationListener {
 	      return provider2 == null;
 	    }
 	    return provider1.equals(provider2);
+	}
+	
+	private float normalizeDegree(float value){
+        if(value >= 0.0f && value <= 180.0f){
+            return value;
+        }else{
+            return 180 + (180 + value);
+        }
 	}
 }
