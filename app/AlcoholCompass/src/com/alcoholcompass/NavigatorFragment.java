@@ -80,6 +80,20 @@ public class NavigatorFragment extends Fragment{
 		super.onCreate(savedInstanceState);
 	}
 	
+	@Override
+	public void onResume() {
+		super.onResume();
+		LocationService service = LocationService.getInstance(getActivity());
+		service.startUpdates();
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		LocationService service = LocationService.getInstance(getActivity());
+		service.stopUpdates();
+	}
+	
 	private void init(){
 		lastArrowDegrees = 0;
 	}
