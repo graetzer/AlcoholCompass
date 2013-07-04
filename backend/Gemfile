@@ -47,3 +47,5 @@ end
 gem 'json'
 gem 'geocoder'
 gem 'formtastic'
+gem 'redis'
+gem 'active_model_serializers'
