@@ -23,6 +23,7 @@ public class NavigatorFragment extends Fragment{
 	private Button buttonMore, buttonNavigation;
 	private int lastArrowDegrees;
 	
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_navigation, container, false);
@@ -37,8 +38,8 @@ public class NavigatorFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				LocationService service = LocationService.getInstance(getActivity());
-				double degree = service.arrowAngleTo(50.778104, 6.060867);
-				setArrow((int)degree);
+				int degree = service.arrowAngleTo(50.778104, 6.060867);
+				setArrow(degree);
 			}
 		});
 		

@@ -67,6 +67,7 @@ public class LocationService implements LocationListener {
 	}
 
 	public int arrowAngleTo(double latitude, double longitude) {
+		//return -compass.getLastDirection();
 		if (mCurrentLocation != null) {
 			
 			
@@ -83,13 +84,11 @@ public class LocationService implements LocationListener {
 							.floatValue(),
 					Double.valueOf(mCurrentLocation.getAltitude()).floatValue(),
 					System.currentTimeMillis());
-			degree += compass.getLastDirection();
+			degree -= compass.getLastDirection();
 			degree += geoField.getDeclination();
-			degree += bearing;// (bearing - degree) * -1;
+			degree += bearing;
 
-			Log.d("LocationService", "Degree: " + degree);
-
-			return compass.getLastDirection();//normalizeDegrees(degree);//Math.round(-degree / 360 + 180);
+			return normalizeDegrees(degree);
 		}
 		return 0;
 	}
