@@ -29,6 +29,7 @@ public class NavigatorFragment extends Fragment{
 	private ListView listViewPlaces;
 	private int lastArrowDegrees;
 	
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_navigation, container, false);
@@ -39,15 +40,20 @@ public class NavigatorFragment extends Fragment{
 		buttonMore = (Button) view.findViewById(R.id.buttonShowMore);
 		buttonNavigation = (Button) view.findViewById(R.id.buttonNavigation);
 		
+		LocationService.getInstance(getActivity()).addListener(new LocationService.LocationListener() {
+			@Override
+			public void onLocationUpdate() {
+				LocationService service = LocationService.getInstance(getActivity());
+				int degree = service.arrowAngleTo(50.778104, 6.060867);
+				setArrow(degree);
+			}
+		});
+		
 		buttonMore.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-//				LocationService service = LocationService.getInstance(getActivity());
-//				double degree = service.arrowAngleTo(50.778104, 6.060867);
-//				setArrow((int)degree);
 				togglePlacesList();
-				
 			}
 		});
 		
@@ -121,14 +127,14 @@ public class NavigatorFragment extends Fragment{
 	public void onResume() {
 		super.onResume();
 		LocationService service = LocationService.getInstance(getActivity());
-		service.startUpdates();
+		service.onResume();
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
 		LocationService service = LocationService.getInstance(getActivity());
-		service.stopUpdates();
+		service.onPause();
 	}
 	
 	private void init(){
@@ -136,6 +142,8 @@ public class NavigatorFragment extends Fragment{
 	}
 	
 	private void setArrow(int degrees){
+		
+		if (getActivity() == null) return;
 		
 		degrees = degrees % 360;
 		final int newDegrees = degrees;

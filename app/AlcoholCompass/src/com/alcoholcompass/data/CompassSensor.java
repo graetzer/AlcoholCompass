@@ -1,17 +1,11 @@
 package com.alcoholcompass.data;
 
 
-import java.lang.ref.WeakReference;
-import java.util.HashSet;
-
-
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Handler;
-import android.os.Message;
 
 public class CompassSensor {
 
@@ -20,7 +14,7 @@ int lastDirection = -1;
 int lastPitch;
 int lastRoll;
 boolean firstReading = true;
-HashSet<CompassListener> listeners = new HashSet<CompassListener>();
+
 
 static CompassSensor mInstance;
 
@@ -40,15 +34,10 @@ public void onResume(){
     sm.registerListener(sensorListener, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
     sm.registerListener(sensorListener, sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_UI);
     firstReading = true;
-    //Restart the timer only if we have listeners
-    if(listeners.size()>0){
-        handler.sendMessageDelayed(Message.obtain(handler, 1),1000);
-    }
 }
 
 public void onPause(){
     sm.unregisterListener(sensorListener);
-    handler.removeMessages(1);
 }
 
 private final SensorEventListener sensorListener = new SensorEventListener(){
@@ -126,22 +115,6 @@ private int filterChange(int newDir){
     return lastDirection+change;
 }
 
-public void addListener(CompassListener listener){
-    if(listeners.size() == 0){
-        //Start the timer on first listener
-        handler.sendMessageDelayed(Message.obtain(handler, 1),1000);
-    }
-    listeners.add(listener);
-}
-
-public void removeListener(CompassListener listener){
-    listeners.remove(listener);
-    if(listeners.size() == 0){
-        handler.removeMessages(1);
-    }
-
-}
-
 public int getLastDirection(){
     return lastDirection;
 }
@@ -152,36 +125,6 @@ public int getLastRoll(){
     return lastRoll;
 }
 
-private void callListeners(){
-    for(CompassListener listener: listeners){
-        listener.onDirectionChanged(lastDirection, lastPitch, lastRoll);
-    }             
 
-}
-
-//This handler is run every 1s, and updates the listeners
-//Static class because otherwise we leak, Eclipse told me so
-static class IncomingHandler extends Handler {
-    private final WeakReference<CompassSensor> compassSensor; 
-
-    IncomingHandler(CompassSensor sensor) {
-        compassSensor = new WeakReference<CompassSensor>(sensor);
-    }
-    @Override
-    public void handleMessage(Message msg)
-    {
-        CompassSensor sensor = compassSensor.get();
-         if (sensor != null) {
-              sensor.callListeners();
-         }
-        sendMessageDelayed(Message.obtain(this, 1), 1000);
-    }
-}
-
-IncomingHandler handler = new IncomingHandler(this);
-
-public interface CompassListener {
-    void onDirectionChanged(int direction, int pitch, int roll);
-}
 
 }
