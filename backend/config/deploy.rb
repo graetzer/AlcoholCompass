@@ -2,7 +2,12 @@ require 'bundler/capistrano'
 
 set :application, "webshop"
 set :repository,  "file:///home/jer/git/alcohol_compass.git"
+set :local_repository, "jer@31.172.42.83:git/alcohol_compass.git"
 set :user, "jer"
+
+set :default_environment, {
+  'PATH' => "$PATH:~/.gem/ruby/2.0.0/bin/"
+}
 
 set :scm, :git
 set :branch, 'backend'
@@ -16,14 +21,15 @@ role :db,  "31.172.42.83", :primary => true
 
 set :subdir, "backend"
 
-after "deploy:update_code", "deploy:checkout_subdir"
-
 namespace :deploy do
   desc "Checkout subdirectory and delete all the other stuff"
   task :checkout_subdir do
-    run "mv #{current_release}/#{subdir}/ /tmp && rm -rf #{current_release}/* && mv /tmp/#{subdir}/* #{current_release}"
+    puts "foo"
+    #run "mv #{current_release}/#{subdir}/ /tmp && rm -rf #{current_release}/* && mv /tmp/#{subdir}/* #{current_release}"
   end
 end
+after "deploy:update_code", "deploy:checkout_subdir"
+
 
 # if you want to clean up old releases on each deploy uncomment this:
 # after "deploy:restart", "deploy:cleanup"
