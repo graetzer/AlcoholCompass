@@ -2,10 +2,12 @@ package com.alcoholcompass.data;
 
 public class Place {
 	private String name, address;
-	private int open, closed;
+	private int id, open, closed;
 	private double latitude, longitude, rating;
 	
-	public Place(String name,
+	public Place(
+			int id,
+			String name,
 			String address,
 			int open,
 			int closed,
@@ -23,11 +25,14 @@ public class Place {
 		
 	}
 	
-	public int getDistance(){
-		//TODO
-		return 350;
+	public int getID() {
+		return id;
 	}
-
+	
+	public void setID(int id) {
+		this.id = id;
+	}
+	
 	public String getName() {
 		return name;
 	}

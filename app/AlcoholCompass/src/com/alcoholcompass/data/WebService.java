@@ -33,7 +33,9 @@ public class WebService {
 				try {
 					for (int i = 0; i < array.length(); i++) {
 						JSONObject obj = array.getJSONObject(i);
-						Place p = new Place(obj.getString("name"),
+						Place p = new Place(
+								obj.optInt("id"),
+								obj.optString("name"),
 								obj.optString("address"),
 								obj.optInt("open_at"),
 								obj.optInt("closed_at"),
