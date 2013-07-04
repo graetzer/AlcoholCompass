@@ -4,7 +4,7 @@ Geocoder.configure({
   lookup: :google,
   timeout: 5,
   cache: Redis.new,
-  units: :km,
+  units: :m,
 })
 
 ActiveSupport.on_load(:active_model_serializers) do
