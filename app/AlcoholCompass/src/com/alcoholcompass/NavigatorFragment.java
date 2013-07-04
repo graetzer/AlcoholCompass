@@ -40,14 +40,19 @@ public class NavigatorFragment extends Fragment{
 		buttonMore = (Button) view.findViewById(R.id.buttonShowMore);
 		buttonNavigation = (Button) view.findViewById(R.id.buttonNavigation);
 		
+		LocationService.getInstance(getActivity()).addListener(new LocationService.LocationListener() {
+			@Override
+			public void onLocationUpdate() {
+				LocationService service = LocationService.getInstance(getActivity());
+				int degree = service.arrowAngleTo(50.778104, 6.060867);
+				setArrow(degree);
+			}
+		});
+		
 		buttonMore.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-
-//				LocationService service = LocationService.getInstance(getActivity());
-//				int degree = service.arrowAngleTo(50.778104, 6.060867);
-//				setArrow(degree);
 				togglePlacesList();
 			}
 		});
@@ -137,6 +142,8 @@ public class NavigatorFragment extends Fragment{
 	}
 	
 	private void setArrow(int degrees){
+		
+		if (getActivity() == null) return;
 		
 		degrees = degrees % 360;
 		final int newDegrees = degrees;
