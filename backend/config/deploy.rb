@@ -5,6 +5,7 @@ set :repository,  "file:///home/jer/git/alcohol_compass.git"
 set :user, "jer"
 
 set :scm, :git
+set :branch, 'backend'
 
 set :deploy_to, "/var/www/alcohol"
 set :deploy_via, :remote_cache
