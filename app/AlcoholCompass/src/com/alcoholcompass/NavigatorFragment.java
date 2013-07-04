@@ -3,7 +3,6 @@ package com.alcoholcompass;
 import java.util.List;
 
 import android.R.interpolator;
-import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
