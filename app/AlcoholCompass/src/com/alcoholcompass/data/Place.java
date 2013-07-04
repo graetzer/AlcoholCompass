@@ -22,6 +22,11 @@ public class Place {
 		this.setRating(0);
 		
 	}
+	
+	public int getDistance(){
+		//TODO
+		return 350;
+	}
 
 	public String getName() {
 		return name;

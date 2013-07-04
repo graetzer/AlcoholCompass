@@ -1,5 +1,7 @@
 package com.alcoholcompass;
 
+import java.util.ArrayList;
+
 import android.R.interpolator;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,17 +12,21 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.alcoholcompass.data.LocationService;
+import com.alcoholcompass.data.Place;
 
 public class NavigatorFragment extends Fragment{
 	
 	private ImageView imageViewArrow;
 	private Button buttonMore, buttonNavigation;
+	private ListView listViewPlaces;
 	private int lastArrowDegrees;
 	
 	
@@ -30,6 +36,7 @@ public class NavigatorFragment extends Fragment{
 		
 		//Views, Buttons zuweisen
 		imageViewArrow = (ImageView) view.findViewById(R.id.imageViewArrow);
+		listViewPlaces = (ListView) view.findViewById(R.id.listViewPlaces);
 		buttonMore = (Button) view.findViewById(R.id.buttonShowMore);
 		buttonNavigation = (Button) view.findViewById(R.id.buttonNavigation);
 		
@@ -40,6 +47,8 @@ public class NavigatorFragment extends Fragment{
 				LocationService service = LocationService.getInstance(getActivity());
 				int degree = service.arrowAngleTo(50.778104, 6.060867);
 				setArrow(degree);
+
+				//demoFillPlacesList();
 			}
 		});
 		
@@ -54,6 +63,18 @@ public class NavigatorFragment extends Fragment{
 		
 		return view;
 	}
+	
+	private void demoFillPlacesList(){
+		ArrayList<Place> liste = new ArrayList<Place>();
+		liste.add(new Place("Toller Kiosk", "Adresse", 0, 0, 12, 12));
+		liste.add(new Place("Noch ein besserer Kiosk", "Adresse", 0, 0, 12, 12));
+		liste.add(new Place("Toller Kiosk", "Adresse", 0, 0, 12, 12));
+		liste.add(new Place("Noch ein besserer Kiosk", "Adresse", 0, 0, 12, 12));
+		listViewPlaces.setAdapter(new PlacesListAdapter(getActivity().getApplicationContext(), liste));
+		
+		Animation slide_in = AnimationUtils.loadAnimation(getActivity(), R.anim.top_down_slide);
+		listViewPlaces.startAnimation(slide_in);
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,14 +86,14 @@ public class NavigatorFragment extends Fragment{
 	public void onResume() {
 		super.onResume();
 		LocationService service = LocationService.getInstance(getActivity());
-		service.startUpdates();
+		service.onResume();
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
 		LocationService service = LocationService.getInstance(getActivity());
-		service.stopUpdates();
+		service.onPause();
 	}
 	
 	private void init(){
