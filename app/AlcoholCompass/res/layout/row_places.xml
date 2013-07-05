@@ -27,7 +27,7 @@
         android:paddingRight="10dp"
         android:paddingTop="10dp"
         android:text="350m"
-        android:textColor="@color/blue"
+        android:textColor="@color/red"
         android:textSize="20sp" />
 
 </RelativeLayout>
