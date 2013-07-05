@@ -40,6 +40,7 @@ public class NavigatorFragment extends Fragment {
 	private LocationService mService;
 	private List<Place> mPlaces;
 	private Place mSelectedPlace;
+	private boolean mAlreadySucceeded = false;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -92,6 +93,13 @@ public class NavigatorFragment extends Fragment {
 						float distance = mService.distanceToLocation(mSelectedPlace.getLatitude(),
 								mSelectedPlace.getLongitude());
 						textViewPlaceDistance.setText(String.format("%d m", (int)distance));
+						
+						if (!mAlreadySucceeded && distance < 100) {
+							mAlreadySucceeded = true;
+							SuccessDialogFragment fragment = new SuccessDialogFragment();
+							fragment.place = mSelectedPlace;
+							fragment.show(getFragmentManager(), "Dialog");
+						}
 					}
 				});
 
@@ -102,6 +110,7 @@ public class NavigatorFragment extends Fragment {
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
 						mSelectedPlace = mPlaces.get(position);
+						mAlreadySucceeded = false;
 						togglePlacesList();
 					}
 				});
@@ -110,8 +119,7 @@ public class NavigatorFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				SuccessDialogFragment.newInstance().show(getFragmentManager(), "Dialog");
-				//togglePlacesList();
+				togglePlacesList();
 			}
 		});
 
