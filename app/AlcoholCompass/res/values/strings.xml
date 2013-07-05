@@ -5,7 +5,9 @@
     <string name="action_settings">Settings</string>
     <string name="more">Mehr</string>
     <string name="less">Weniger</string>
+    <string name="navigation">Navigation</string>
+    <string name="report_bar">Kiosk / Bar melden</string>
     <string name="fragment_navigation_title">Kompass</string>
-    <string name="fragment_showtell_title">Du willst mehr?</string>
+    <string name="fragment_showtell_title">Informationen</string>
 
 </resources>

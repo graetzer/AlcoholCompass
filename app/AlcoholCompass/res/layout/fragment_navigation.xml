@@ -8,14 +8,14 @@
         android:id="@+id/imageViewArrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout1"
+        android:layout_above="@+id/linearLayoutButtonBarMain"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:padding="30dp"
         android:src="@drawable/beerbottle" />
 
     <LinearLayout
-        android:id="@+id/linearLayout1"
+        android:id="@+id/linearLayoutButtonBarMain"
         style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Mehr" />
+            android:text="@string/more" />
 
         <Button
             android:id="@+id/buttonNavigation"
@@ -38,7 +38,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Navigation" />
+            android:text="@string/navigation" />
     </LinearLayout>
 
     <ListView
@@ -57,7 +57,7 @@
         android:id="@+id/textViewPlaceDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout1"
+        android:layout_above="@+id/linearLayoutButtonBarMain"
         android:layout_centerHorizontal="true"
         android:background="@drawable/label_background_large"
         android:gravity="center"
