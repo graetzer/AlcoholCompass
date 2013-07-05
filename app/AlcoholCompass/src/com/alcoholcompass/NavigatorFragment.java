@@ -102,7 +102,7 @@ public class NavigatorFragment extends Fragment {
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
 						mSelectedPlace = mPlaces.get(position);
-
+						togglePlacesList();
 					}
 				});
 
@@ -141,10 +141,10 @@ public class NavigatorFragment extends Fragment {
 	}
 
 	private void togglePlacesList() {
-		if (linearLayoutPlaces.getVisibility() == View.INVISIBLE) {
-			displayPlacesList();
-		} else {
+		if (linearLayoutPlaces.getVisibility() == View.VISIBLE) {
 			hidePlacesList();
+		} else {
+			displayPlacesList();
 		}
 	}
 
