@@ -44,7 +44,7 @@ public class PlacesListAdapter extends BaseAdapter {
 		TextView distance = (TextView) rowView.findViewById(R.id.textViewRowPlacesDistance);
 		
 		name.setText(items.get(arg0).getName());
-		distance.setText(items.get(arg0).getDistance() + "m");
+		//distance.setText(items.get(arg0).getDistance() + "m");
 		
 		return rowView;
 	}
