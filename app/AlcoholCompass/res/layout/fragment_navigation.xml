@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/linearLayout1"
         android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:padding="30dp"
         android:src="@drawable/beerbottle" />
 

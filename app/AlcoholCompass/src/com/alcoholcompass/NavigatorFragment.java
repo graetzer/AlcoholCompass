@@ -19,6 +19,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.alcoholcompass.data.LocationService;
 import com.alcoholcompass.data.Place;
@@ -27,6 +28,7 @@ import com.alcoholcompass.data.WebService;
 public class NavigatorFragment extends Fragment{
 	
 	private ImageView imageViewArrow;
+	private TextView textViewPlaceName, textViewPlaceDistance;
 	private Button buttonMore, buttonNavigation;
 	private ListView listViewPlaces;
 	private int lastArrowDegrees;
@@ -42,6 +44,8 @@ public class NavigatorFragment extends Fragment{
 		listViewPlaces = (ListView) view.findViewById(R.id.listViewPlaces);
 		buttonMore = (Button) view.findViewById(R.id.buttonShowMore);
 		buttonNavigation = (Button) view.findViewById(R.id.buttonNavigation);
+		textViewPlaceName = (TextView) view.findViewById(R.id.textViewPlaceName);
+		textViewPlaceDistance = (TextView) view.findViewById(R.id.textViewPlaceDistance);
 		
 		final LocationService service = LocationService.getInstance(getActivity());
 		Location loc = service.currentLocation();
