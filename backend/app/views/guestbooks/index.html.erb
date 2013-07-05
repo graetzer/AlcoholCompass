@@ -1,0 +1,33 @@
+<h1>Listing guestbooks</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Location</th>
+      <th>Text</th>
+      <th>URL</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @guestbooks.each do |guestbook| %>
+      <tr>
+        <td><%= guestbook.user %></td>
+        <td><%= guestbook.location.try(:name) %></td>
+        <td><%= guestbook.text %></td>
+        <td><%= guestbook.url %></td>
+        <td><%= link_to 'Show', guestbook %></td>
+        <td><%= link_to 'Edit', edit_guestbook_path(guestbook) %></td>
+        <td><%= link_to 'Destroy', guestbook, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Guestbook', new_guestbook_path %>

@@ -7,6 +7,8 @@ class Location < ActiveRecord::Base
 
   attr_accessor :distance
 
+  has_many :guestbooks
+
   def hours=(val)
     @hours = nil
     write_attribute :hours, val
@@ -20,9 +22,15 @@ class Location < ActiveRecord::Base
   end
 
   WEEK = (1..4) # Montag-Donnerstag
+  NIGHT_HOURS = (0..7)
 
   def hours_for_today
     now = Time.zone.now
+    night_hour = false
+    if NIGHT_HOURS.include?(now.hour)
+      night_hour = true
+      now -= (now.hour + 1)
+    end
     range = []
 
     return range if hours.blank?
@@ -39,6 +47,9 @@ class Location < ActiveRecord::Base
       range = to_range(*hours['sunday'])
     end
 
+    unless range.empty?
+      range = [(range[0]-1.day), (range[1]-1.day)]
+    end
     range
   end
 

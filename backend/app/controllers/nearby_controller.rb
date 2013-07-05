@@ -7,7 +7,7 @@ class NearbyController < ApplicationController
     longitude = data[:longitude].to_f
     distance  = (data[:distance] || 2).to_f
 
-    @locations = Location.near([latitude, longitude], distance)
+    @locations = Location.near([latitude, longitude], distance).first(20)
 
     @locations = @locations.map { |location|
       location.distance = location.distance_to([latitude, longitude])

@@ -4,13 +4,13 @@ set :application, "webshop"
 set :repository,  "file:///home/jer/git/alcohol_compass.git"
 set :local_repository, "jer@31.172.42.83:git/alcohol_compass.git"
 set :user, "jer"
+set :use_sudo, false
 
 set :default_environment, {
   'PATH' => "$PATH:~/.gem/ruby/2.0.0/bin/"
 }
 
 set :scm, :git
-set :branch, 'backend'
 
 set :deploy_to, "/var/www/alcohol"
 set :deploy_via, :remote_cache

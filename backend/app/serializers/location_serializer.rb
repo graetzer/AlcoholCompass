@@ -10,6 +10,8 @@ class LocationSerializer < ActiveModel::Serializer
   attributes :distance
   attributes :open_now
 
+  has_many :guestbooks
+
   def open_at
     object.hours_for_today.first.try(:utc).to_i
   end

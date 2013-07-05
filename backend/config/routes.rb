@@ -1,4 +1,6 @@
 Backend::Application.routes.draw do
+  resources :guestbooks
+
   resources :locations
   resources :nearby, only: :index
 

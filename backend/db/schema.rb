@@ -11,7 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130704192115) do
+ActiveRecord::Schema.define(version: 20130704230553) do
+
+  create_table "guestbooks", force: true do |t|
+    t.string   "user"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "location_id"
+    t.text     "text"
+    t.string   "url"
+  end
 
   create_table "locations", force: true do |t|
     t.string   "name"
@@ -22,5 +31,7 @@ ActiveRecord::Schema.define(version: 20130704192115) do
     t.datetime "updated_at"
     t.text     "hours"
   end
+
+  add_index "locations", ["latitude", "longitude"], name: "index_locations_on_latitude_and_longitude"
 
 end
