@@ -70,6 +70,10 @@ public class WebService {
 		});
 	}
 	
+	public static void sendGuestbookEntry(Place place, String user, String text, byte[]image) {
+		
+	}
+	
 	public interface PlacesHandler {
 		public void success(List<Place> places);
 		public void failure();
