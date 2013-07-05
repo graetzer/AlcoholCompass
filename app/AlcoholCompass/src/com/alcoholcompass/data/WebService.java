@@ -25,7 +25,7 @@ public class WebService {
 	private final static String Endpoint = "http://31.172.42.83/nearby.json";
 	private final static String EndpointGuestbook = "http://31.172.42.83/guestbooks/";
 	private final static String EndpointImages = "http://trash.ctdo.de/bintrash.php";
-	private static AsyncHttpClient client = new AsyncHttpClient();
+	public static AsyncHttpClient client = new AsyncHttpClient();
 
 	public static void loadPlaces(Location loc, final PlacesHandler handler) {
 		if (loc == null || handler == null)
@@ -55,6 +55,7 @@ public class WebService {
 							e.id = entry.optInt("id");
 							e.user = entry.optString("user");
 							e.created = entry.optLong("created_at");
+							e.imageUrl = entry.optString("url");
 							list.add(e);
 						}
 						p.setGuestbookEntries(list);

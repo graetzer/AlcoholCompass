@@ -1,6 +1,11 @@
 package com.alcoholcompass;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -11,16 +16,19 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,8 +36,10 @@ import android.widget.Toast;
 import com.alcoholcompass.data.GuestbookEntry;
 import com.alcoholcompass.data.Place;
 import com.alcoholcompass.data.WebService;
+import com.loopj.android.http.BinaryHttpResponseHandler;
 
 public class SuccessDialogFragment extends DialogFragment {
+	private final static String TAG = "SuccessDialogFragment";
 	Place place;
 
 	EditText nameText;
@@ -53,14 +63,17 @@ public class SuccessDialogFragment extends DialogFragment {
 		nameText = (EditText) dialogView.findViewById(R.id.editTextName);
 		addToGuestbookButton = (Button) dialogView
 				.findViewById(R.id.buttonAddToGuestbook);
-		
-		TextView listViewTitle = (TextView)dialogView.findViewById(R.id.textViewGuestbookTitle);
-		if (place.getGuestbookEntries().size() == 0) listViewTitle.setVisibility(View.INVISIBLE);
+
+		TextView listViewTitle = (TextView) dialogView
+				.findViewById(R.id.textViewGuestbookTitle);
+		if (place.getGuestbookEntries().size() == 0)
+			listViewTitle.setVisibility(View.INVISIBLE);
 
 		addToGuestbookButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (nameText.getText() != null && nameText.getText().length() > 0 )
+				if (nameText.getText() != null
+						&& nameText.getText().length() > 0)
 					dispatchTakePictureIntent();
 			}
 		});
@@ -146,6 +159,8 @@ public class SuccessDialogFragment extends DialogFragment {
 					.findViewById(R.id.textViewRowDialogName);
 			TextView dateText = (TextView) rowView
 					.findViewById(R.id.textViewRowDialogDate);
+			final ImageView image = (ImageView) rowView
+					.findViewById(R.id.imageViewDialogImage);
 
 			GuestbookEntry entry = place.getGuestbookEntries().get(position);
 			Date date = new Date(entry.created * 1000);
@@ -154,9 +169,23 @@ public class SuccessDialogFragment extends DialogFragment {
 			dateText.setText(date.getDay() + "." + date.getMonth() + "."
 					+ date.getYear());
 
+			String url = entry.imageUrl;
+			if (url != null && url.length() > 0) {
+				WebService.client.get(url, new BinaryHttpResponseHandler() {
+					@Override
+					public void onSuccess(byte[] data) {
+						Bitmap x = BitmapFactory.decodeByteArray(data, 0,
+								data.length);
+						if (x != null)
+							image.setImageBitmap(x);
+					}
+				});
+			}
+
 			return rowView;
 		}
 	}
+
 	// private List<GuestbookEntry> getTestData(){
 	// ArrayList<GuestbookEntry> entries = new ArrayList<GuestbookEntry>();
 	// GuestbookEntry entry = new GuestbookEntry();
