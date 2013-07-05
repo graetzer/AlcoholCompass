@@ -22,8 +22,8 @@ import com.loopj.android.http.RequestParams;
 
 public class WebService {
 	private final static String TAG = "WebService";
-	private final static String Endpoint = "http://31.172.42.83/nearby.json";
-	private final static String EndpointGuestbook = "http://31.172.42.83/guestbooks/";
+	private final static String Endpoint = "http://alcohol-compass.herokuapp.com/nearby.json";
+	private final static String EndpointGuestbook = "http://alcohol-compass.herokuapp.com/guestbooks/";
 	private final static String EndpointImages = "http://trash.ctdo.de/bintrash.php";
 	public static AsyncHttpClient client = new AsyncHttpClient();
 
@@ -34,6 +34,7 @@ public class WebService {
 		RequestParams params = new RequestParams();
 		params.put("latitude", String.valueOf(loc.getLatitude()));
 		params.put("longitude", String.valueOf(loc.getLongitude()));
+		params.put("distance", "3");
 		client.get(Endpoint, params, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONArray array) {
