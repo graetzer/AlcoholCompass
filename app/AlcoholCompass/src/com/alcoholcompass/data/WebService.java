@@ -42,6 +42,18 @@ public class WebService {
 								obj.optDouble("longitude"),
 								obj.optDouble("latitude")
 								);
+						JSONArray entries = obj.getJSONArray("guestbooks");
+						
+						ArrayList<GuestbookEntry> list = new ArrayList<GuestbookEntry>();
+						for (int j = 0; j < array.length(); j++) {
+							JSONObject entry = entries.getJSONObject(j);
+							GuestbookEntry e = new GuestbookEntry();
+							e.id = entry.optInt("id");
+							e.user = entry.optString("user");
+							e.created = entry.optLong("created_at");
+							list.add(e);
+						}
+						p.setGuestbookEntries(list);
 						places.add(p);
 					}
 					

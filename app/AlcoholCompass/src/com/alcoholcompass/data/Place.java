@@ -1,9 +1,12 @@
 package com.alcoholcompass.data;
 
+import java.util.List;
+
 public class Place {
 	private String name, address;
 	private int id, open, closed;
 	private double latitude, longitude, rating;
+	private List<GuestbookEntry> guestbookEntries;
 	
 	public Place(
 			int id,
@@ -89,5 +92,12 @@ public class Place {
 		this.longitude = longitude;
 	}
 	
+	public void setGuestbookEntries(List<GuestbookEntry> entries) {
+		this.guestbookEntries = entries;
+	}
+	
+	public List<GuestbookEntry> getGuestbookEntries() {
+		return this.guestbookEntries;
+	}
 	
 }
