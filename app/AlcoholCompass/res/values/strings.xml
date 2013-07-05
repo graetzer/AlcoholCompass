@@ -10,5 +10,7 @@
     <string name="report_bar">Kiosk / Bar melden</string>
     <string name="fragment_navigation_title">Kompass</string>
     <string name="fragment_showtell_title">Informationen</string>
+    <string name="alert_dialog_ok">Ok</string>
+    <string name="alert_dialog_cancel">Abbrechen</string>
 
 </resources>
