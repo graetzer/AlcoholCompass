@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,8 +32,9 @@ public class NavigatorFragment extends Fragment {
 
 	private ImageView imageViewArrow;
 	private TextView textViewPlaceName, textViewPlaceDistance;
-	private Button buttonMore, buttonNavigation;
+	private Button buttonMore, buttonNavigation, buttonClosePlacesList;
 	private ListView listViewPlaces;
+	private LinearLayout linearLayoutPlaces;
 	private int lastArrowDegrees;
 	private boolean isArrowTurning;
 	private LocationService mService;
@@ -48,8 +50,10 @@ public class NavigatorFragment extends Fragment {
 		// Views, Buttons zuweisen
 		imageViewArrow = (ImageView) view.findViewById(R.id.imageViewArrow);
 		listViewPlaces = (ListView) view.findViewById(R.id.listViewPlaces);
+		linearLayoutPlaces = (LinearLayout) view.findViewById(R.id.linearLayoutPlaces);
 		buttonMore = (Button) view.findViewById(R.id.buttonShowMore);
 		buttonNavigation = (Button) view.findViewById(R.id.buttonNavigation);
+		buttonClosePlacesList = (Button) view.findViewById(R.id.buttonClosePlacesList);
 		textViewPlaceName = (TextView) view
 				.findViewById(R.id.textViewPlaceName);
 		textViewPlaceDistance = (TextView) view
@@ -124,12 +128,20 @@ public class NavigatorFragment extends Fragment {
 				startActivity(navi);
 			}
 		});
+		
+		buttonClosePlacesList.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				togglePlacesList();
+			}
+		});
 
 		return view;
 	}
 
 	private void togglePlacesList() {
-		if (listViewPlaces.getVisibility() == View.INVISIBLE) {
+		if (linearLayoutPlaces.getVisibility() == View.INVISIBLE) {
 			displayPlacesList();
 		} else {
 			hidePlacesList();
@@ -138,10 +150,10 @@ public class NavigatorFragment extends Fragment {
 
 	private void displayPlacesList() {
 
-		listViewPlaces.setVisibility(View.VISIBLE);
+		linearLayoutPlaces.setVisibility(View.VISIBLE);
 		Animation slide_in = AnimationUtils.loadAnimation(getActivity(),
 				R.anim.top_down_slide);
-		listViewPlaces.startAnimation(slide_in);
+		linearLayoutPlaces.startAnimation(slide_in);
 		buttonMore.setText(R.string.less);
 	}
 
@@ -160,12 +172,12 @@ public class NavigatorFragment extends Fragment {
 
 			@Override
 			public void onAnimationEnd(Animation animation) {
-				listViewPlaces.setVisibility(View.INVISIBLE);
+				linearLayoutPlaces.setVisibility(View.INVISIBLE);
 				buttonMore.setText(R.string.more);
 			}
 		});
 
-		listViewPlaces.startAnimation(slide_out);
+		linearLayoutPlaces.startAnimation(slide_out);
 	}
 
 	@Override

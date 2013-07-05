@@ -41,18 +41,6 @@
             android:text="@string/navigation" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/listViewPlaces"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:background="#BBFFFFFF"
-        android:divider="@color/blue"
-        android:dividerHeight="3dp"
-        android:visibility="gone" >
-    </ListView>
-
     <TextView
         android:id="@+id/textViewPlaceDistance"
         android:layout_width="wrap_content"
@@ -82,5 +70,34 @@
         android:paddingTop="2dp"
         android:text="Das kleine Büdchen"
         android:textColor="#FFFFFF" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutPlaces"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ListView
+            android:id="@+id/listViewPlaces"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:background="#BBFFFFFF"
+            android:divider="@color/blue"
+            android:dividerHeight="3dp"
+            android:visibility="visible" >
+        </ListView>
+        
+        <Button
+            android:id="@+id/buttonClosePlacesList"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#99FFFFFF"
+            android:text="@string/close" />
+
+    </LinearLayout>
 
 </RelativeLayout>
