@@ -1,6 +1,11 @@
 package com.alcoholcompass;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +21,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
