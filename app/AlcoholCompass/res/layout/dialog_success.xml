@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -21,6 +20,7 @@
         android:layout_below="@+id/textViewDialogSuccessTitle"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
         android:padding="5dp"
         android:text="Please take a moment and add yourself to our Guestbook"
         android:textAlignment="center"
@@ -33,24 +33,30 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@id/textToImpress"
+        android:orientation="vertical"
         android:layout_marginTop="5dp" >
 
         <EditText
             android:id="@+id/editTextName"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
             android:hint="Name" >
-
             <requestFocus />
         </EditText>
 
         <Button
             android:id="@+id/buttonAddToGuestbook"
-            android:layout_width="0dp"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
             android:text="Add to Guestbook" />
+
+        <TextView
+            android:id="@+id/textViewSpacer"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/blue" />
+
     </LinearLayout>
 
     <TextView

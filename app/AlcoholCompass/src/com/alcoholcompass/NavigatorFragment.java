@@ -3,6 +3,7 @@ package com.alcoholcompass;
 import java.util.List;
 
 import android.R.interpolator;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -99,9 +100,10 @@ public class NavigatorFragment extends Fragment {
 						setArrow(degree);
 
 						String dateStr = mSelectedPlace.getName()
-								+ ", open until: "
+								+ getString(R.string.open_until) + " "
 								+ DateFormat.format("kk:mm",
-										mSelectedPlace.getClosed() * 1000);
+										mSelectedPlace.getClosed() * 1000) + " "
+										+ getString(R.string.clock);
 
 						textViewPlaceName.setText(dateStr);
 						float distance = mService.distanceToLocation(
@@ -317,7 +319,7 @@ public class NavigatorFragment extends Fragment {
 
 			Place place = mPlaces.get(position);
 
-			String dateStr = place.getName() + ", open until: "
+			String dateStr = place.getName() + getString(R.string.open_until) + " "
 					+ DateFormat.format("kk:mm", place.getClosed() * 1000);
 
 			nameText.setText(dateStr);
