@@ -39,8 +39,8 @@ public class WebService {
 								obj.optString("address"),
 								obj.optInt("open_at"),
 								obj.optInt("closed_at"),
-								obj.optDouble("longitude"),
-								obj.optDouble("latitude")
+								obj.optDouble("latitude"),
+								obj.optDouble("longitude")
 								);
 						
 						JSONArray entries = obj.getJSONArray("guestbooks");

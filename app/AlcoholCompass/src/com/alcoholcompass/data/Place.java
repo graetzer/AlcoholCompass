@@ -22,8 +22,8 @@ public class Place {
 		this.setAddress(address);
 		this.setOpen(open);
 		this.setClosed(closed);
-		this.setLongitude(longitude);
 		this.setLatitude(latitude);
+		this.setLongitude(longitude);
 		this.setRating(0);
 		
 	}

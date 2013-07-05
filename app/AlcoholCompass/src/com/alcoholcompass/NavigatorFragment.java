@@ -87,8 +87,7 @@ public class NavigatorFragment extends Fragment {
 						textViewPlaceName.setText(mSelectedPlace.getName());
 						float distance = mService.distanceToLocation(mSelectedPlace.getLatitude(),
 								mSelectedPlace.getLongitude());
-						distance /= 1000;
-						textViewPlaceDistance.setText(String.format("%.2fkm", distance));
+						textViewPlaceDistance.setText(String.format("%d m", (int)distance));
 					}
 				});
 
@@ -274,8 +273,7 @@ public class NavigatorFragment extends Fragment {
 			nameText.setText(place.getName());
 			float distance = mService.distanceToLocation(place.getLatitude(),
 					place.getLongitude());
-			distance /= 1000;
-			distanceText.setText(String.format("%.2fkm", distance));
+			distanceText.setText(String.format("%d m", (int)distance));
 
 			return rowView;
 		}
