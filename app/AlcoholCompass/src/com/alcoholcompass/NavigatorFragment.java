@@ -16,6 +16,8 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -25,102 +27,145 @@ import com.alcoholcompass.data.LocationService;
 import com.alcoholcompass.data.Place;
 import com.alcoholcompass.data.WebService;
 
-public class NavigatorFragment extends Fragment{
-	
+public class NavigatorFragment extends Fragment {
+
 	private ImageView imageViewArrow;
 	private TextView textViewPlaceName, textViewPlaceDistance;
 	private Button buttonMore, buttonNavigation;
 	private ListView listViewPlaces;
 	private int lastArrowDegrees;
 	private boolean isArrowTurning;
-	
-	
+	private LocationService mService;
+	private List<Place> mPlaces;
+	private Place mSelectedPlace;
+
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_navigation, container, false);
-		
-		//Views, Buttons zuweisen
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_navigation, container,
+				false);
+
+		// Views, Buttons zuweisen
 		imageViewArrow = (ImageView) view.findViewById(R.id.imageViewArrow);
 		listViewPlaces = (ListView) view.findViewById(R.id.listViewPlaces);
 		buttonMore = (Button) view.findViewById(R.id.buttonShowMore);
 		buttonNavigation = (Button) view.findViewById(R.id.buttonNavigation);
-		textViewPlaceName = (TextView) view.findViewById(R.id.textViewPlaceName);
-		textViewPlaceDistance = (TextView) view.findViewById(R.id.textViewPlaceDistance);
-		
-		final LocationService service = LocationService.getInstance(getActivity());
-		Location loc = service.currentLocation();
+		textViewPlaceName = (TextView) view
+				.findViewById(R.id.textViewPlaceName);
+		textViewPlaceDistance = (TextView) view
+				.findViewById(R.id.textViewPlaceDistance);
+
+		mService = LocationService.getInstance(getActivity());
+		Location loc = mService.currentLocation();
 		WebService.loadPlaces(loc, new WebService.PlacesHandler() {
-			
+
 			@Override
 			public void success(List<Place> places) {
-				listViewPlaces.setAdapter(new PlacesListAdapter(getActivity().getApplicationContext(), places));
+				mPlaces = places;
+				if (mPlaces != null && mPlaces.size() > 0) {
+					listViewPlaces.setAdapter(new PlacesListAdapter());
+					mSelectedPlace = mPlaces.get(0);
+				}
 			}
-			
+
 			@Override
-			public void failure() {}
-		});
-				
-		LocationService.getInstance(getActivity()).addListener(new LocationService.LocationListener() {
-			@Override
-			public void onLocationUpdate() {
-				int degree = service.arrowAngleTo(50.778104, 6.060867);
-				setArrow(degree);
+			public void failure() {
 			}
 		});
-		
+
+		LocationService.getInstance(getActivity()).addListener(
+				new LocationService.LocationListener() {
+					@Override
+					public void onLocationUpdate() {
+						if (mSelectedPlace == null) return;
+						
+						int degree = mService.arrowAngleTo(
+								mSelectedPlace.getLatitude(),
+								mSelectedPlace.getLongitude());
+						setArrow(degree);
+						
+						textViewPlaceName.setText(mSelectedPlace.getName());
+						float distance = mService.distanceToLocation(mSelectedPlace.getLatitude(),
+								mSelectedPlace.getLongitude());
+						distance /= 1000;
+						textViewPlaceDistance.setText(String.format("%.2fkm", distance));
+					}
+				});
+
+		listViewPlaces
+				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						mSelectedPlace = mPlaces.get(position);
+
+					}
+				});
+
 		buttonMore.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				togglePlacesList();
 			}
 		});
-		
+
 		buttonNavigation.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				Intent navi = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:ll=" + 50.7777075 + "," + 6.0608821 ));
+				if (mSelectedPlace == null)
+					return;
+
+				Intent navi = new Intent(Intent.ACTION_VIEW, Uri
+						.parse("google.navigation:ll="
+								+ mSelectedPlace.getLatitude() + ","
+								+ mSelectedPlace.getLongitude()));
 				startActivity(navi);
 			}
 		});
-		
+
 		return view;
 	}
-	
-	private void togglePlacesList(){
-		if(listViewPlaces.getVisibility() == View.INVISIBLE){
+
+	private void togglePlacesList() {
+		if (listViewPlaces.getVisibility() == View.INVISIBLE) {
 			displayPlacesList();
-		}else{
+		} else {
 			hidePlacesList();
 		}
 	}
-	
-	private void displayPlacesList(){
-		
+
+	private void displayPlacesList() {
+
 		listViewPlaces.setVisibility(View.VISIBLE);
-		Animation slide_in = AnimationUtils.loadAnimation(getActivity(), R.anim.top_down_slide);
+		Animation slide_in = AnimationUtils.loadAnimation(getActivity(),
+				R.anim.top_down_slide);
 		listViewPlaces.startAnimation(slide_in);
 		buttonMore.setText(R.string.less);
 	}
-	
-	private void hidePlacesList(){
-		Animation slide_out = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_up_slide);
+
+	private void hidePlacesList() {
+		Animation slide_out = AnimationUtils.loadAnimation(getActivity(),
+				R.anim.bottom_up_slide);
 		slide_out.setAnimationListener(new AnimationListener() {
-			
+
 			@Override
-			public void onAnimationStart(Animation animation) {}
-			
+			public void onAnimationStart(Animation animation) {
+			}
+
 			@Override
-			public void onAnimationRepeat(Animation animation) {}
-			
+			public void onAnimationRepeat(Animation animation) {
+			}
+
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				listViewPlaces.setVisibility(View.INVISIBLE);
 				buttonMore.setText(R.string.more);
 			}
 		});
-		
+
 		listViewPlaces.startAnimation(slide_out);
 	}
 
@@ -129,54 +174,59 @@ public class NavigatorFragment extends Fragment{
 		init();
 		super.onCreate(savedInstanceState);
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
 		LocationService service = LocationService.getInstance(getActivity());
 		service.onResume();
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
 		LocationService service = LocationService.getInstance(getActivity());
 		service.onPause();
 	}
-	
-	private void init(){
+
+	private void init() {
 		lastArrowDegrees = 0;
 		isArrowTurning = false;
 	}
-	
-	private void setArrow(int degrees){
-		
-		if (getActivity() == null || isArrowTurning) return;
-		
+
+	private void setArrow(int degrees) {
+
+		if (getActivity() == null || isArrowTurning)
+			return;
+
 		degrees = degrees % 360;
 		final int newDegrees = degrees;
-		if(degrees == lastArrowDegrees) return;
+		if (degrees == lastArrowDegrees)
+			return;
 		isArrowTurning = true;
-		
+
 		imageViewArrow.setRotation(0);
-		
-		//Animation erstellen
-		RotateAnimation animation = new RotateAnimation(lastArrowDegrees, newDegrees,
-				Animation.RELATIVE_TO_SELF, 0.5f,
+
+		// Animation erstellen
+		RotateAnimation animation = new RotateAnimation(lastArrowDegrees,
+				newDegrees, Animation.RELATIVE_TO_SELF, 0.5f,
 				Animation.RELATIVE_TO_SELF, 0.5f);
 		animation.setFillEnabled(true);
 		animation.setFillBefore(true);
 		animation.setDuration(500);
-		animation.setInterpolator(getActivity().getApplicationContext(), interpolator.accelerate_decelerate);
-		
+		animation.setInterpolator(getActivity().getApplicationContext(),
+				interpolator.accelerate_decelerate);
+
 		animation.setAnimationListener(new AnimationListener() {
-			
+
 			@Override
-			public void onAnimationStart(Animation animation) {}
-			
+			public void onAnimationStart(Animation animation) {
+			}
+
 			@Override
-			public void onAnimationRepeat(Animation animation) {}
-			
+			public void onAnimationRepeat(Animation animation) {
+			}
+
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				lastArrowDegrees = newDegrees;
@@ -184,9 +234,52 @@ public class NavigatorFragment extends Fragment{
 				isArrowTurning = false;
 			}
 		});
-		
+
 		imageViewArrow.startAnimation(animation);
-		
+
 	}
-	
+
+	private class PlacesListAdapter extends BaseAdapter {
+
+		@Override
+		public int getCount() {
+			return mPlaces.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return mPlaces.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View rowView = convertView;
+			if (convertView == null) {
+				rowView = getActivity().getLayoutInflater().inflate(
+						R.layout.row_places, parent, false);
+			}
+
+			TextView nameText = (TextView) rowView
+					.findViewById(R.id.textViewRowPlacesName);
+			TextView distanceText = (TextView) rowView
+					.findViewById(R.id.textViewRowPlacesDistance);
+
+			Place place = mPlaces.get(position);
+
+			nameText.setText(place.getName());
+			float distance = mService.distanceToLocation(place.getLatitude(),
+					place.getLongitude());
+			distance /= 1000;
+			distanceText.setText(String.format("%.2fkm", distance));
+
+			return rowView;
+		}
+
+	}
+
 }

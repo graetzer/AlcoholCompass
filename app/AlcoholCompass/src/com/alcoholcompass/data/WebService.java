@@ -42,10 +42,10 @@ public class WebService {
 								obj.optDouble("longitude"),
 								obj.optDouble("latitude")
 								);
-						JSONArray entries = obj.getJSONArray("guestbooks");
 						
+						JSONArray entries = obj.getJSONArray("guestbooks");
 						ArrayList<GuestbookEntry> list = new ArrayList<GuestbookEntry>();
-						for (int j = 0; j < array.length(); j++) {
+						for (int j = 0; j < entries.length(); j++) {
 							JSONObject entry = entries.getJSONObject(j);
 							GuestbookEntry e = new GuestbookEntry();
 							e.id = entry.optInt("id");
