@@ -4,6 +4,8 @@ import java.util.List;
 
 import android.R.interpolator;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alcoholcompass.data.LocationService;
 import com.alcoholcompass.data.Place;
@@ -66,6 +69,7 @@ public class NavigatorFragment extends Fragment {
 
 		mService = LocationService.getInstance(getActivity());
 		Location loc = mService.currentLocation();
+		
 		WebService.loadPlaces(loc, new WebService.PlacesHandler() {
 
 			@Override
@@ -106,7 +110,7 @@ public class NavigatorFragment extends Fragment {
 						textViewPlaceDistance.setText(String.format("%d m",
 								(int) distance));
 
-						if (!mAlreadySucceeded && distance < 10000) {
+						if (!mAlreadySucceeded && distance < 100) {
 							FragmentManager manager = getFragmentManager();
 							if (manager == null)
 								return;
@@ -150,7 +154,13 @@ public class NavigatorFragment extends Fragment {
 						.parse("google.navigation:ll="
 								+ mSelectedPlace.getLatitude() + ","
 								+ mSelectedPlace.getLongitude()));
-				startActivity(navi);
+				PackageManager packageManager = getActivity().getPackageManager();
+				List<ResolveInfo> list = packageManager.queryIntentActivities(navi,
+						PackageManager.MATCH_DEFAULT_ONLY);
+				if (list.size() > 0)
+					startActivity(navi);
+				else
+					Toast.makeText(getActivity(), "You don't have navigation Software", Toast.LENGTH_SHORT).show();
 			}
 		});
 

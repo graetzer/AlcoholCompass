@@ -37,6 +37,12 @@ public class LocationService implements LocationListener {
 		mCurrentLocation = locationManager
 				.getLastKnownLocation(mLocationProvider);
 		compass = CompassSensor.getInstance(mCtx);
+		
+		if (mCurrentLocation == null) {
+			mCurrentLocation = new Location("tmp");
+			mCurrentLocation.setLatitude(50.781161);
+			mCurrentLocation.setLongitude(6.078753);
+		}
 	}
 
 	public Location currentLocation() {
