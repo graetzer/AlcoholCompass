@@ -12,13 +12,64 @@
         android:paddingTop="15dp"
         android:text="Success"
         android:textColor="@color/red"
-        android:textSize="50sp" />
+        android:textSize="45sp" />
+
+    <TextView
+        android:id="@+id/textToImpress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewDialogSuccessTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:padding="5dp"
+        android:text="Please take a moment and add yourself to our Guestbook"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <LinearLayout
+        android:id="@+id/guestbookForm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/textToImpress"
+        android:layout_marginTop="5dp" >
+
+        <EditText
+            android:id="@+id/editTextName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:hint="Name" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/buttonAddToGuestbook"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Add to Guestbook" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewGuestbookTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/listViewDialog"
+        android:layout_centerHorizontal="true"
+        android:text="@string/dialog_guestbook_title"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <ListView
         android:id="@+id/listViewDialog"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_below="@+id/textViewDialogSuccessTitle"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/guestbookForm"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp" >
     </ListView>

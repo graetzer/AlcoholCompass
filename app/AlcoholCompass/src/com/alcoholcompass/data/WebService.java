@@ -23,7 +23,7 @@ import com.loopj.android.http.RequestParams;
 public class WebService {
 	private final static String TAG = "WebService";
 	private final static String Endpoint = "http://31.172.42.83/nearby.json";
-	private final static String EndpointGuestbook = "http://31.172.42.83/guestbooks";
+	private final static String EndpointGuestbook = "http://31.172.42.83/guestbooks/";
 	private final static String EndpointImages = "http://trash.ctdo.de/bintrash.php";
 	private static AsyncHttpClient client = new AsyncHttpClient();
 
@@ -81,17 +81,18 @@ public class WebService {
 		RequestParams params = new RequestParams();
 		ByteArrayInputStream input = new ByteArrayInputStream(image);
 		params.put("action", "upload");
-		params.put("upfile", input, "image.jpeg");
-		params.put("validity", "9");
+		params.put("upfile", input, "image.jpeg", "image/jpeg");
+		params.put("validity", "6");
 
-		client.put(EndpointImages, params, new AsyncHttpResponseHandler() {
+		client.post(EndpointImages, params, new AsyncHttpResponseHandler() {
 			@Override
 			public void onSuccess(String message) {
-				int start = message.indexOf("Fuer Foren etc: <a href=\"");
+				String s = "Fuer Foren etc: <a href=\"";
+				int start = message.indexOf(s);
 				int end = message.indexOf("\">http://trash.ctdo.de/b/", start);				
 				String url = "";
 				if (start != -1 && end != -1)
-					url = message.substring(start, end);
+					url = message.substring(start+s.length(), end);
 				
 				uploadStuff(ctx, place, user, text, url);
 			}
@@ -108,15 +109,20 @@ public class WebService {
 	private static void uploadStuff(final Context ctx, final Place place,
 			final String user, final String text, String url) {
 		try {
-			String json = "{guestbook:{user: \"" + user
-					+ "\",location_id: " + place.getID() + ", text: \""
-					+ text + "\", url: \""+url+"\"}}";
+			String json = "{\"guestbook\":{\"user\": \"" + user
+					+ "\",\"location_id\": " + place.getID() + ", \"text\": \""
+					+ text + "\", \"url\": \""+url+"\"}}";
 			
 			client.post(ctx, EndpointGuestbook, new StringEntity(json),
 					"application/json", new AsyncHttpResponseHandler() {
 						@Override
 						public void onSuccess(String arg1) {
 							Log.i(TAG, "Success");
+						}
+						
+						@Override
+						public void onFailure(Throwable t, String msg) {
+							Log.e(TAG, msg, t);
 						}
 					});
 		} catch (UnsupportedEncodingException e) {

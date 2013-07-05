@@ -1,13 +1,11 @@
 package com.alcoholcompass;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,14 +19,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alcoholcompass.data.GuestbookEntry;
 import com.alcoholcompass.data.Place;
+import com.alcoholcompass.data.WebService;
 
 public class SuccessDialogFragment extends DialogFragment {
 	Place place;
+
+	EditText nameText;
+	Button addToGuestbookButton;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -45,6 +50,21 @@ public class SuccessDialogFragment extends DialogFragment {
 				.findViewById(R.id.listViewDialog);
 		listView.setAdapter(new GuestbookAdapter());
 
+		nameText = (EditText) dialogView.findViewById(R.id.editTextName);
+		addToGuestbookButton = (Button) dialogView
+				.findViewById(R.id.buttonAddToGuestbook);
+		
+		TextView listViewTitle = (TextView)dialogView.findViewById(R.id.textViewGuestbookTitle);
+		if (place.getGuestbookEntries().size() == 0) listViewTitle.setVisibility(View.INVISIBLE);
+
+		addToGuestbookButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (nameText.getText() != null && nameText.getText().length() > 0 )
+					dispatchTakePictureIntent();
+			}
+		});
+
 		return new AlertDialog.Builder(getActivity())
 				.setView(dialogView)
 				.setPositiveButton(R.string.alert_dialog_ok,
@@ -54,22 +74,20 @@ public class SuccessDialogFragment extends DialogFragment {
 									int whichButton) {
 								// ((FragmentAlertDialog)getActivity()).doPositiveClick();
 							}
-						})
-				.setNegativeButton(R.string.alert_dialog_cancel,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int whichButton) {
-								// ((FragmentAlertDialog)getActivity()).doNegativeClick();
-							}
 						}).create();
 	}
 
 	private static final int PHOTO_CODE = 132;
 
 	private void dispatchTakePictureIntent() {
-		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		startActivityForResult(takePictureIntent, PHOTO_CODE);
+		if (isIntentAvailable(MediaStore.ACTION_IMAGE_CAPTURE)) {
+			Intent takePictureIntent = new Intent(
+					MediaStore.ACTION_IMAGE_CAPTURE);
+			startActivityForResult(takePictureIntent, PHOTO_CODE);
+		} else {
+			Toast.makeText(getActivity(), "No Photo App installed",
+					Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	@Override
@@ -77,11 +95,18 @@ public class SuccessDialogFragment extends DialogFragment {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == PHOTO_CODE) {
 			Bundle extras = data.getExtras();
-			Bitmap bmp = (Bitmap) extras.get("data");
+			if (extras != null) {
 
-			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			bmp.compress(Bitmap.CompressFormat.JPEG, 90, stream);
-			byte[] byteArray = stream.toByteArray();
+				Bitmap bmp = (Bitmap) extras.get("data");
+				ByteArrayOutputStream stream = new ByteArrayOutputStream();
+				bmp.compress(Bitmap.CompressFormat.JPEG, 90, stream);
+				byte[] imageData = stream.toByteArray();
+
+				WebService.sendGuestbookEntry(getActivity(), place, nameText
+						.getText().toString(), "", imageData);
+
+				dismiss();
+			}
 		}
 	}
 

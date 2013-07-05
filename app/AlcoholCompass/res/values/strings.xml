@@ -12,5 +12,6 @@
     <string name="fragment_showtell_title">Informationen</string>
     <string name="alert_dialog_ok">Ok</string>
     <string name="alert_dialog_cancel">Abbrechen</string>
+    <string name="dialog_guestbook_title">We were here</string>
 
 </resources>

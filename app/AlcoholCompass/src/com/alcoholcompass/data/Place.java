@@ -17,7 +17,7 @@ public class Place {
 			double latitude,
 			double longitude
 			){
-		
+		this.setID(id);
 		this.setName(name);
 		this.setAddress(address);
 		this.setOpen(open);

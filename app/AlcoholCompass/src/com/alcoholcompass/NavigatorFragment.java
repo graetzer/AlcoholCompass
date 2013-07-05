@@ -8,6 +8,8 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -51,10 +53,12 @@ public class NavigatorFragment extends Fragment {
 		// Views, Buttons zuweisen
 		imageViewArrow = (ImageView) view.findViewById(R.id.imageViewArrow);
 		listViewPlaces = (ListView) view.findViewById(R.id.listViewPlaces);
-		linearLayoutPlaces = (LinearLayout) view.findViewById(R.id.linearLayoutPlaces);
+		linearLayoutPlaces = (LinearLayout) view
+				.findViewById(R.id.linearLayoutPlaces);
 		buttonMore = (Button) view.findViewById(R.id.buttonShowMore);
 		buttonNavigation = (Button) view.findViewById(R.id.buttonNavigation);
-		buttonClosePlacesList = (Button) view.findViewById(R.id.buttonClosePlacesList);
+		buttonClosePlacesList = (Button) view
+				.findViewById(R.id.buttonClosePlacesList);
 		textViewPlaceName = (TextView) view
 				.findViewById(R.id.textViewPlaceName);
 		textViewPlaceDistance = (TextView) view
@@ -82,23 +86,35 @@ public class NavigatorFragment extends Fragment {
 				new LocationService.LocationListener() {
 					@Override
 					public void onLocationUpdate() {
-						if (mSelectedPlace == null) return;
-						
+						if (mSelectedPlace == null)
+							return;
+
 						int degree = mService.arrowAngleTo(
 								mSelectedPlace.getLatitude(),
 								mSelectedPlace.getLongitude());
 						setArrow(degree);
-						
-						textViewPlaceName.setText(mSelectedPlace.getName());
-						float distance = mService.distanceToLocation(mSelectedPlace.getLatitude(),
+
+						String dateStr = mSelectedPlace.getName()
+								+ ", open until: "
+								+ DateFormat.format("kk:mm",
+										mSelectedPlace.getClosed() * 1000);
+
+						textViewPlaceName.setText(dateStr);
+						float distance = mService.distanceToLocation(
+								mSelectedPlace.getLatitude(),
 								mSelectedPlace.getLongitude());
-						textViewPlaceDistance.setText(String.format("%d m", (int)distance));
-						
-						if (!mAlreadySucceeded && distance < 100) {
+						textViewPlaceDistance.setText(String.format("%d m",
+								(int) distance));
+
+						if (!mAlreadySucceeded && distance < 10000) {
+							FragmentManager manager = getFragmentManager();
+							if (manager == null)
+								return;
+
 							mAlreadySucceeded = true;
 							SuccessDialogFragment fragment = new SuccessDialogFragment();
 							fragment.place = mSelectedPlace;
-							fragment.show(getFragmentManager(), "Dialog");
+							fragment.show(manager, "Dialog");
 						}
 					}
 				});
@@ -137,9 +153,9 @@ public class NavigatorFragment extends Fragment {
 				startActivity(navi);
 			}
 		});
-		
+
 		buttonClosePlacesList.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				togglePlacesList();
@@ -291,10 +307,13 @@ public class NavigatorFragment extends Fragment {
 
 			Place place = mPlaces.get(position);
 
-			nameText.setText(place.getName());
+			String dateStr = place.getName() + ", open until: "
+					+ DateFormat.format("kk:mm", place.getClosed() * 1000);
+
+			nameText.setText(dateStr);
 			float distance = mService.distanceToLocation(place.getLatitude(),
 					place.getLongitude());
-			distanceText.setText(String.format("%d m", (int)distance));
+			distanceText.setText(String.format("%d m", (int) distance));
 
 			return rowView;
 		}
