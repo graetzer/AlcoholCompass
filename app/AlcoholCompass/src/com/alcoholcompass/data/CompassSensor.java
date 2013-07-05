@@ -43,7 +43,8 @@ public void onPause(){
 private final SensorEventListener sensorListener = new SensorEventListener(){
     float accelerometerValues[] = null;
     float geomagneticMatrix[] = null;
-    public void onSensorChanged(SensorEvent event) {
+    @Override
+	public void onSensorChanged(SensorEvent event) {
         if (event.accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE)
             return;
 
@@ -73,15 +74,16 @@ private final SensorEventListener sensorListener = new SensorEventListener(){
             int direction = normalizeDegrees(filterChange((int)Math.toDegrees(values[0])));
             int pitch = normalizeDegrees(Math.toDegrees(values[1]));
             int roll = normalizeDegrees(Math.toDegrees(values[2]));
-            if((int)direction != (int)lastDirection){
-                lastDirection = (int)direction;
-                lastPitch = (int)pitch;
-                lastRoll = (int)roll;
+            if(direction != lastDirection){
+                lastDirection = direction;
+                lastPitch = pitch;
+                lastRoll = roll;
             }
         }
     }
 
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    @Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
 };

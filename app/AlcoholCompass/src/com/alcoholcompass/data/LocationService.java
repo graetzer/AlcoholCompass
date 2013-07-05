@@ -96,6 +96,7 @@ public class LocationService implements LocationListener {
 		return 0;
 	}
 
+	@Override
 	public void onLocationChanged(Location location) {
 		// Called when a new location is found by the network location provider.
 		// makeUseOfNewLocation(location);
@@ -103,12 +104,15 @@ public class LocationService implements LocationListener {
 			mCurrentLocation = location;
 	}
 
+	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
+	@Override
 	public void onProviderEnabled(String provider) {
 	}
 
+	@Override
 	public void onProviderDisabled(String provider) {
 	}
 

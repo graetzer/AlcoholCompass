@@ -4,16 +4,18 @@
     android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/textViewRowDialogNam"
+        android:id="@+id/textViewRowDialogName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignBottom="@+id/imageViewDialogImage"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/textViewRowDialogDate"
+        android:layout_toRightOf="@+id/imageViewDialogImage"
+        android:gravity="center_vertical"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingTop="10dp"
-        android:text="Kiosk Test"
+        android:text="Max Mustermann"
         android:textColor="@color/grey"
         android:textSize="20sp" />
 
@@ -21,13 +23,24 @@
         android:id="@+id/textViewRowDialogDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textViewRowDialogName"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
         android:paddingBottom="10dp"
         android:paddingRight="10dp"
         android:paddingTop="10dp"
-        android:text="350m"
+        android:text="22.06.2013"
         android:textColor="@color/red"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/imageViewDialogImage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:padding="5dp"
+        android:src="@drawable/ic_launcher" />
 
 </RelativeLayout>

@@ -110,7 +110,8 @@ public class NavigatorFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				togglePlacesList();
+				SuccessDialogFragment.newInstance().show(getFragmentManager(), "Dialog");
+				//togglePlacesList();
 			}
 		});
 
@@ -276,9 +277,9 @@ public class NavigatorFragment extends Fragment {
 			}
 
 			TextView nameText = (TextView) rowView
-					.findViewById(R.id.textViewRowPlacesName);
+					.findViewById(R.id.textViewRowDialogNam);
 			TextView distanceText = (TextView) rowView
-					.findViewById(R.id.textViewRowPlacesDistance);
+					.findViewById(R.id.textViewRowDialogDate);
 
 			Place place = mPlaces.get(position);
 
