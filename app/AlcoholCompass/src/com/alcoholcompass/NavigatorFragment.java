@@ -1,5 +1,6 @@
 package com.alcoholcompass;
 
+import java.util.Date;
 import java.util.List;
 
 import android.R.interpolator;
@@ -97,12 +98,22 @@ public class NavigatorFragment extends Fragment {
 								mSelectedPlace.getLatitude(),
 								mSelectedPlace.getLongitude());
 						setArrow(degree);
-
-						String dateStr = mSelectedPlace.getName()
-								+ getString(R.string.open_until) + " "
-								+ DateFormat.format("kk:mm",
-										mSelectedPlace.getClosed() * 1000) + " "
-										+ getString(R.string.clock);
+						
+						String dateStr;
+						Date d = new Date(mSelectedPlace.getOpen()*1000);
+						if (d.after(new Date())) {
+							dateStr = mSelectedPlace.getName()
+									+ getString(R.string.open_from) + " "
+									+ DateFormat.format("kk:mm",
+											mSelectedPlace.getOpen() * 1000) + " "
+											+ getString(R.string.clock);
+						} else {
+							dateStr = mSelectedPlace.getName()
+									+ getString(R.string.open_until) + " "
+									+ DateFormat.format("kk:mm",
+											mSelectedPlace.getClosed() * 1000) + " "
+											+ getString(R.string.clock);
+						}
 
 						textViewPlaceName.setText(dateStr);
 						float distance = mService.distanceToLocation(
@@ -317,9 +328,22 @@ public class NavigatorFragment extends Fragment {
 					.findViewById(R.id.textViewRowDialogDate);
 
 			Place place = mPlaces.get(position);
-
-			String dateStr = place.getName() + getString(R.string.open_until) + " "
-					+ DateFormat.format("kk:mm", place.getClosed() * 1000);
+			
+			String dateStr;
+			Date d = new Date(place.getOpen()*1000);
+			if (d.after(new Date())) {
+				dateStr = place.getName()
+						+ getString(R.string.open_from) + " "
+						+ DateFormat.format("kk:mm",
+								place.getOpen() * 1000) + " "
+								+ getString(R.string.clock);
+			} else {
+				dateStr = place.getName()
+						+ getString(R.string.open_until) + " "
+						+ DateFormat.format("kk:mm",
+								place.getClosed() * 1000) + " "
+								+ getString(R.string.clock);
+			}
 
 			nameText.setText(dateStr);
 			float distance = mService.distanceToLocation(place.getLatitude(),

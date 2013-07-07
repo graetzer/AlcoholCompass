@@ -11,6 +11,7 @@
     <string name="fragment_navigation_title">Kompass</string>
     <string name="fragment_showtell_title">Informationen</string>
     <string name="alert_dialog_ok">Ok</string>
+    <string name="open_from">, geöffnet ab</string>
     <string name="open_until">, geöffnet bis</string>
     <string name="clock">Uhr</string>
     <string name="alert_dialog_cancel">Abbrechen</string>

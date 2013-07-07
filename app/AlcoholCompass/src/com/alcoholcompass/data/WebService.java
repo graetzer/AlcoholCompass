@@ -34,7 +34,7 @@ public class WebService {
 		RequestParams params = new RequestParams();
 		params.put("latitude", String.valueOf(loc.getLatitude()));
 		params.put("longitude", String.valueOf(loc.getLongitude()));
-		params.put("distance", "3");
+		params.put("distance", "5");
 		client.get(Endpoint, params, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONArray array) {
