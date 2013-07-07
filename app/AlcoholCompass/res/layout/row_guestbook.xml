@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageViewDialogImage"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/textViewRowDialogDate"
+        android:layout_toLeftOf="@+id/textViewRowDistance"
         android:layout_toRightOf="@+id/imageViewDialogImage"
         android:gravity="center_vertical"
         android:paddingBottom="10dp"
@@ -20,7 +20,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/textViewRowDialogDate"
+        android:id="@+id/textViewRowDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/textViewRowDialogName"

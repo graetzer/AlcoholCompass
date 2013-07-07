@@ -323,32 +323,21 @@ public class NavigatorFragment extends Fragment {
 			}
 
 			TextView nameText = (TextView) rowView
-					.findViewById(R.id.textViewRowDialogNam);
+					.findViewById(R.id.textViewRowPlaceName);
 			TextView distanceText = (TextView) rowView
-					.findViewById(R.id.textViewRowDialogDate);
+					.findViewById(R.id.textViewRowDistance);
+			TextView timeText = (TextView) rowView
+					.findViewById(R.id.textViewRowOpenTime);
 
 			Place place = mPlaces.get(position);
 			
-			String dateStr;
-			Date d = new Date(place.getOpen()*1000);
-			if (d.after(new Date())) {
-				dateStr = place.getName()
-						+ getString(R.string.open_from) + " "
-						+ DateFormat.format("kk:mm",
-								place.getOpen() * 1000) + " "
-								+ getString(R.string.clock);
-			} else {
-				dateStr = place.getName()
-						+ getString(R.string.open_until) + " "
-						+ DateFormat.format("kk:mm",
-								place.getClosed() * 1000) + " "
-								+ getString(R.string.clock);
-			}
-
-			nameText.setText(dateStr);
+			nameText.setText(place.getName());
 			float distance = mService.distanceToLocation(place.getLatitude(),
 					place.getLongitude());
-			distanceText.setText(String.format("%d m", (int) distance));
+			distanceText.setText(String.format("%d Meter", (int) distance));
+			timeText.setText(getString(R.string.open_until_row) + 
+					" " + DateFormat.format("kk:mm",
+					place.getOpen() * 1000));
 
 			return rowView;
 		}

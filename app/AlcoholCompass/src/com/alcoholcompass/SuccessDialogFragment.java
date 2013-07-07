@@ -154,7 +154,7 @@ public class SuccessDialogFragment extends DialogFragment {
 			TextView nameText = (TextView) rowView
 					.findViewById(R.id.textViewRowDialogName);
 			TextView dateText = (TextView) rowView
-					.findViewById(R.id.textViewRowDialogDate);
+					.findViewById(R.id.textViewRowDistance);
 			final ImageView image = (ImageView) rowView
 					.findViewById(R.id.imageViewDialogImage);
 
