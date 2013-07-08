@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.R.interpolator;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -86,55 +87,7 @@ public class NavigatorFragment extends Fragment {
 			public void failure() {
 			}
 		});
-
-		LocationService.getInstance(getActivity()).addListener(
-				new LocationService.LocationListener() {
-					@Override
-					public void onLocationUpdate() {
-						if (mSelectedPlace == null)
-							return;
-
-						int degree = mService.arrowAngleTo(
-								mSelectedPlace.getLatitude(),
-								mSelectedPlace.getLongitude());
-						setArrow(degree);
-						
-						String dateStr;
-						Date d = new Date(mSelectedPlace.getOpen()*1000);
-						if (d.after(new Date())) {
-							dateStr = mSelectedPlace.getName()
-									+ getString(R.string.open_from) + " "
-									+ DateFormat.format("kk:mm",
-											mSelectedPlace.getOpen() * 1000) + " "
-											+ getString(R.string.clock);
-						} else {
-							dateStr = mSelectedPlace.getName()
-									+ getString(R.string.open_until) + " "
-									+ DateFormat.format("kk:mm",
-											mSelectedPlace.getClosed() * 1000) + " "
-											+ getString(R.string.clock);
-						}
-
-						textViewPlaceName.setText(dateStr);
-						float distance = mService.distanceToLocation(
-								mSelectedPlace.getLatitude(),
-								mSelectedPlace.getLongitude());
-						textViewPlaceDistance.setText(String.format("%d m",
-								(int) distance));
-
-						if (!mAlreadySucceeded && distance < 100) {
-							FragmentManager manager = getFragmentManager();
-							if (manager == null)
-								return;
-
-							mAlreadySucceeded = true;
-							SuccessDialogFragment fragment = new SuccessDialogFragment();
-							fragment.place = mSelectedPlace;
-							fragment.show(manager, "Dialog");
-						}
-					}
-				});
-
+		
 		listViewPlaces
 				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -185,6 +138,63 @@ public class NavigatorFragment extends Fragment {
 		});
 
 		return view;
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		
+		final LocationService service = LocationService.getInstance(getActivity());
+		service.addListener(
+				new LocationService.LocationListener() {
+					@Override
+					public void onLocationUpdate() {
+						if (!isAdded()) {
+							service.removeListener(this);
+							return;
+						}
+						if (mSelectedPlace == null) return;
+						
+						int degree = mService.arrowAngleTo(
+								mSelectedPlace.getLatitude(),
+								mSelectedPlace.getLongitude());
+						setArrow(degree);
+						
+						String dateStr;
+						Date d = new Date(mSelectedPlace.getOpen()*1000);
+						if (d.after(new Date())) {
+							dateStr = mSelectedPlace.getName()
+									+ getString(R.string.open_from) + " "
+									+ DateFormat.format("kk:mm",
+											mSelectedPlace.getOpen() * 1000) + " "
+											+ getString(R.string.clock);
+						} else {
+							dateStr = mSelectedPlace.getName()
+									+ getString(R.string.open_until) + " "
+									+ DateFormat.format("kk:mm",
+											mSelectedPlace.getClosed() * 1000) + " "
+											+ getString(R.string.clock);
+						}
+
+						textViewPlaceName.setText(dateStr);
+						float distance = mService.distanceToLocation(
+								mSelectedPlace.getLatitude(),
+								mSelectedPlace.getLongitude());
+						textViewPlaceDistance.setText(String.format("%d m",
+								(int) distance));
+
+						if (!mAlreadySucceeded && distance < 100) {
+							FragmentManager manager = getFragmentManager();
+							if (manager == null) return;
+
+							mAlreadySucceeded = true;
+							SuccessDialogFragment fragment = new SuccessDialogFragment();
+							fragment.place = mSelectedPlace;
+							fragment.show(manager, "Dialog");
+						}
+					}
+				});
+
 	}
 
 	private void togglePlacesList() {

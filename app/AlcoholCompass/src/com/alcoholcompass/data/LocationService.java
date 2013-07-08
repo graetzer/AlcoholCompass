@@ -11,8 +11,10 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 public class LocationService implements LocationListener {
+	private final static String TAG = "LocationListener";
 	private static LocationService instance;
 
 	public static LocationService getInstance(Context ctx) {
@@ -26,7 +28,7 @@ public class LocationService implements LocationListener {
 	private CompassSensor compass;
 	private LocationManager locationManager;
 	private Location mCurrentLocation;
-	static private final int duration = 2500;
+	static private final int duration = 1000;
 
 	private LocationService(Context ctx) {
 		mCtx = ctx;
@@ -54,7 +56,7 @@ public class LocationService implements LocationListener {
 		compass.onResume();
 	    //Restart the timer only if we have listeners
 	    if(listeners.size()>0){
-	        handler.sendMessageDelayed(Message.obtain(handler, 1),1000);
+	        handler.sendMessageDelayed(Message.obtain(handler, 1), duration);
 	    }
 	}
 
@@ -230,7 +232,11 @@ public class LocationService implements LocationListener {
 	    {
 	    	LocationService sensor = locationService.get();
 	         if (sensor != null) {
+	        	 try {
 	              sensor.callListeners();
+	        	 } catch (Exception e) {
+	        		 Log.e(TAG, "Fuck them", e);
+	        	 }
 	         }
 	        sendMessageDelayed(Message.obtain(this, 1), duration);
 	    }
