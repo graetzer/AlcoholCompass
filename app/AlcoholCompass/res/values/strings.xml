@@ -15,6 +15,7 @@
     <string name="open_until_row">Geöffnet bis</string>
     <string name="clock">Uhr</string>
     <string name="alert_dialog_cancel">Abbrechen</string>
-    <string name="dialog_guestbook_title">We found the alcohol</string>
+    <string name="dialog_guestbook_title">Wir haben hier Alkohol gefunden:</string>
+    <string name="dialog_guestbook_impress">Bitte nimm dir einen kurzen Moment und trage Dich in das Gästebuch ein.</string>
 
 </resources>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="#FFFFFF" >
 
     <TextView
         android:id="@+id/textViewRowDialogName"
@@ -42,6 +43,17 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:padding="5dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_launcher" />
+
+    <ImageView
+        android:id="@+id/imageViewRowOverlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageViewDialogImage"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/imageViewDialogImage"
+        android:src="@drawable/guestbook_overlay" />
 
 </RelativeLayout>
